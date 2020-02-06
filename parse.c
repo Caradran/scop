@@ -20,14 +20,17 @@ t_obj parse(char *filename)
 	char	*buffer;
 	t_obj	obj;
 	int j;
+	int i;
+	float *array;
 
 	obj = init_obj();
 	if (obj.error || (fd = open(filename, O_RDONLY)) < 0)
 		return (obj);
 	j = 1;
+	i = 0;
 	while (get_next_line(fd, &buffer) == 1)
 	{
-		parse_all_vert(buffer, &obj);
+		parse_all_vert(buffer, &obj, &i);
 		if (check_error_obj(&obj))
 		{
 			printf("###### parse error line : %d ######\n", j);
@@ -36,8 +39,10 @@ t_obj parse(char *filename)
 		ft_memdel((void**)&buffer);
 		j++;
 	}
+	obj.f_size = i;
 	ft_memdel((void**)&buffer);
 	if (DEBUG)
 		print_obj(obj);
+	array = vect_toa(obj);
 	return (obj);
 }

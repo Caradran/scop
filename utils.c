@@ -60,3 +60,15 @@ int		count_words(char *line)
 	}
 	return (j);
 }
+
+int max(int a, int b)
+{
+	if (a > b)
+		return (a);
+	return (b);
+}
+
+int max_4(int a, int b, int c, int d)
+{
+	return (max(max(a, b), max(c, d)));
+}

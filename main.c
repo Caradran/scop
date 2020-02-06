@@ -60,32 +60,32 @@ void	generate_vao(GLuint *vao, GLuint vbo)
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE,6 * sizeof(GLfloat), (void *)(3 * sizeof(GLfloat)));
 	glEnableVertexAttribArray(1);
-
 }
 
-GLuint	ft_vertex_shader(char *name, GLenum shader_type)
+GLuint	ft_shader(char *name, GLenum shader_type)
 {
 	int			vert_s;
-	GLuint		vs;
+	GLuint		sha;
 	const char	*shader = readshad(name, &vert_s);
 	GLint success;
     GLchar infoLog[512];
 
 	printf("%s\n", shader);
-	vs = glCreateShader(shader_type);
-	glShaderSource(vs, 1, &shader, NULL);
-	glCompileShader(vs);
-	glGetShaderiv(vs, GL_COMPILE_STATUS, &success);
+	sha = glCreateShader(shader_type);
+	glShaderSource(sha, 1, &shader, NULL);
+	glCompileShader(sha);
+	glGetShaderiv(sha, GL_COMPILE_STATUS, &success);
 	if (!success)
 	{
-		glGetShaderInfoLog(vs, 512, NULL, infoLog);
+		glGetShaderInfoLog(sha, 512, NULL, infoLog);
 		if (shader_type == GL_VERTEX_SHADER)
 			printf("ERROR::SHADER::VERTEX::COMPILATION_FAILED\n%s\n", infoLog);
 		if (shader_type == GL_FRAGMENT_SHADER)
 			printf("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n%s\n", infoLog);
 		exit(1);
 	}
-	return (vs);
+	ft_memdel((void**)&shader);
+	return (sha);
 }
 
 GLuint	create_program(void)
@@ -93,12 +93,13 @@ GLuint	create_program(void)
 	GLuint shader_program;
 	GLint success;
 	GLchar infoLog[512];
+	GLuint shaders[2];
 
 	shader_program = glCreateProgram();
 	glAttachShader(shader_program,
-		ft_vertex_shader("frag.sha", GL_FRAGMENT_SHADER));
+		(shaders[0] = ft_shader("frag.sha", GL_FRAGMENT_SHADER)));
 	glAttachShader(shader_program,
-		ft_vertex_shader("vertex.sha", GL_VERTEX_SHADER));
+		(shaders[1] = ft_shader("vertex.sha", GL_VERTEX_SHADER)));
 	glLinkProgram(shader_program);
  	glGetProgramiv( shader_program, GL_LINK_STATUS, &success );
     if (!success)
@@ -160,6 +161,9 @@ int		main(int argc, char **argv)
 		// put the stuff we've been drawing onto the display
 		glfwSwapBuffers(window);
 	}
+	glDeleteVertexArrays(1 , &vao);
+	glDeleteBuffers(1, &vbo);
 	glfwTerminate();
+	while(1);
 	return (0);
 }

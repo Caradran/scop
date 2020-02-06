@@ -34,6 +34,7 @@ typedef struct	s_l
 typedef struct	s_f
 {
 	int 		size;
+	int			flag;
 	int 		*verts;
 	int 		*vt;
 	int			*vp;
@@ -71,7 +72,9 @@ t_f			init_f(void);
 */
 
 t_obj	parse(char *filename);
-void	parse_all_vert(char *buffer, t_obj *obj);
+void	parse_all_vert(char *buffer, t_obj *obj, int *j);
+float	*vect_toa(t_obj obj);
+
 
 int		check_error_obj(t_obj *obj);
 
@@ -83,6 +86,7 @@ int		check_error_obj(t_obj *obj);
 
 void	print_obj(t_obj obj);
 void	print_vert(t_vert vert, int type);
+void	print_array(float *array, t_obj obj);
 
 /* ------------------- */
 
@@ -92,7 +96,8 @@ void	print_vert(t_vert vert, int type);
 
 int				ft_ralloc(char **str, int size);
 double			ft_atof(const char *str);
-
+int				max_4(int a, int b, int c, int d);
+int				max(int a, int b);
 
 
 /* ------------------- */
