@@ -185,7 +185,7 @@ static void parse_faces(char *buffer, t_f *f, t_obj *obj)
 			f->flag += 2;
 			if (!IS_NUM(buffer[i]))
 				i++;
-			if ((f->vp[j] = nb_face(&(buffer[i]), obj->vp.size, &(f->size))) <= 0)
+			if ((f->vn[j] = nb_face(&(buffer[i]), obj->vn.size, &(f->size))) <= 0)
 				break ;
 			i += size_num(&(buffer[i]));
 		}
@@ -214,7 +214,7 @@ static void parse_faces(char *buffer, t_f *f, t_obj *obj)
 			if (f->flag & 1)
 				printf("vt : %d ", f->vt[i]);
 			if (f->flag & 2)
-				printf("vn : %d", f->vp[i]);
+				printf("vn : %d", f->vn[i]);
 			printf("\n");
 			i++;
 		}

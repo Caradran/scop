@@ -51,7 +51,7 @@ void	print_face(t_f face, int j)
 		if (face.flag & 1)
 			printf("vt : %d ", face.vt[i]);
 		if (face.flag & 2)
-			printf("vn : %d", face.vp[i]);
+			printf("vn : %d", face.vn[i]);
 		printf("\n");
 		i++;
 	}

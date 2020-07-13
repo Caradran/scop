@@ -1,12 +1,23 @@
 #ifndef SCOP_H
 # define SCOP_H
 
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 # include "libft/include/libft.h"
 # include "get_next_line.h"
 # include <stdio.h>
 # define DEBUG 1
 # define IS_NUM(x) ((x >= '0' && x <= '9') || x == '-' || x == '.')
 # define IS_WHITESPACE(x) (x == ' ' || x == '\t' || x == '\n' || x == '\f' || x == '\r')
+
+typedef struct	s_glstruct
+{
+	GLFWwindow	*window;
+	GLuint		vbo;
+	GLuint		vao;
+	GLuint		ebo;
+	GLuint		shader_program;
+}				t_glstruct;
 
 typedef struct	s_vert
 {
@@ -37,8 +48,14 @@ typedef struct	s_f
 	int			flag;
 	int 		*verts;
 	int 		*vt;
-	int			*vp;
+	int			*vn;
 }				t_f;
+
+typedef struct	s_index
+{
+	float		*verts;
+	int			*index;	
+}				t_index;
 
 typedef struct	s_obj
 {
@@ -53,6 +70,8 @@ typedef struct	s_obj
 	t_p			*p;
 	t_l			*l;
 	t_f			*f;
+	int			max_vs;
+	int			*nb_vs_size;
 }				t_obj;
 
 /*
@@ -64,6 +83,7 @@ t_vert		init_vert(void);
 t_p			init_p(void);
 t_l			init_l(void);
 t_f			init_f(void);
+t_index		init_index(void);
 
 /* ------------------- */
 
@@ -73,8 +93,9 @@ t_f			init_f(void);
 
 t_obj	parse(char *filename);
 void	parse_all_vert(char *buffer, t_obj *obj, int *j);
-float	*vect_toa(t_obj obj);
 
+float	*vect_toa(t_obj obj);
+int 	**faces_toa(t_obj obj);
 
 int		check_error_obj(t_obj *obj);
 
@@ -94,6 +115,7 @@ void	print_array(float *array, t_obj obj);
 *	Utils.
 */
 
+int				ft_max_vs(t_obj obj);
 int				ft_ralloc(char **str, int size);
 double			ft_atof(const char *str);
 int				max_4(int a, int b, int c, int d);

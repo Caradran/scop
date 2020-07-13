@@ -68,3 +68,14 @@ t_obj	init_obj(void)
 	check_error_obj(&obj);
 	return (obj);
 }
+
+t_index init_index(void)
+{
+	t_index	ind;
+
+	if (!(ind.verts = ft_memalloc(1024 * sizeof(float))))
+		return ((t_index){NULL, NULL});
+	if (!(ind.index = ft_memalloc(1024 * sizeof(int))))
+		return ((t_index){NULL, NULL});
+	return (ind);
+}

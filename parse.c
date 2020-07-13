@@ -21,7 +21,6 @@ t_obj parse(char *filename)
 	t_obj	obj;
 	int j;
 	int i;
-	float *array;
 
 	obj = init_obj();
 	if (obj.error || (fd = open(filename, O_RDONLY)) < 0)
@@ -43,6 +42,5 @@ t_obj parse(char *filename)
 	ft_memdel((void**)&buffer);
 	if (DEBUG)
 		print_obj(obj);
-	array = vect_toa(obj);
 	return (obj);
 }

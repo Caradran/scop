@@ -12,7 +12,7 @@ void	fill_ret(float **ret, int ssot[4], float *vert)
 		j = 0;
 		while (j < ssot[3])
 		{
-			(*ret)[i * ssot[1] + ssot[2] + j] = vert[i + j];
+			(*ret)[i * ssot[1] + ssot[2] + j] = vert[i * ssot[3] + j];
 			j++;
 		}
 		i++;
@@ -53,3 +53,89 @@ void	print_array(float *array, t_obj obj)
 	}
 	printf("\n");
 }
+
+
+void	ft_concat_n(int **indices, t_f f, int n, int nb_cp)
+{
+	int i;
+
+	i = 0;
+	while (i < n)
+	{
+		(*indices)[nb_cp * 3 * n + i] = f.verts[i] - 1;
+		i++;
+	}
+	i = 0;
+	while (i < n)
+	{
+		(*indices)[nb_cp * 3 * n + 1 * n + i] = f.vn[i] - 1;
+		i++;
+	}
+	i = 0;
+	while (i < n)
+	{
+		(*indices)[nb_cp * 3 * n + 2 * n + i] = f.vt[i] - 1;
+		i++;
+	}
+}
+
+int	*faces_n_toa(t_obj obj, int size)
+{
+	int i;
+	int *indices;
+	int nb_vs;
+	int nb_cp;
+
+	i = 0;
+	nb_vs = 0;
+	while (i < obj.f_size)
+	{
+		if (size == obj.f[i].size)
+			nb_vs++;
+		i++;
+	}
+	if (!(indices = ft_memalloc(sizeof(int) * nb_vs * 3 * size)))
+		return (NULL);
+	i = 0;
+	nb_cp = 0;
+	while (i < obj.f_size)
+	{
+		if (size == obj.f[i].size)
+			ft_concat_n(&indices, obj.f[i], size, nb_cp++);
+		i++;
+	}
+	i = 0;
+	while (i < nb_vs)
+	{
+		nb_cp = 0;
+		while (nb_cp < size * 3)
+		{
+			printf("%d ", indices[i * size * 3 + nb_cp]);
+			nb_cp++;
+		}
+		printf("\n");
+		i++;
+	}
+	return (indices);
+}
+
+int **faces_toa(t_obj obj)
+{
+	int i;
+	int **indices;
+	int max_vs;
+
+	i = 0;
+	max_vs = ft_max_vs(obj);
+
+	if (!(indices = ft_memalloc(sizeof(int*) * max_vs)))
+		return (NULL);
+	i = 0;
+	while (i < max_vs)
+	{
+		indices[i] = faces_n_toa(obj, i + 2);
+		i++;
+	}
+	return (indices);
+}
+
