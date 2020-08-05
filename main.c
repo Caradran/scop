@@ -172,18 +172,30 @@ void	set_max_vs(t_obj	*obj)
 	obj->nb_vs_size = nb_vs_size;
 }
 
-t_index	create_index(int **indices, float *points, t_obj obj)
-{
-	t_index ind;
-	int i;
-	int j;
+// t_index	create_index(int **indices, float *points, t_obj obj)
+// {
+// 	t_index ind;
+// 	int	*index_pairs;
+// 	int	i;
+// 	int	j;
+// 	int	k;
 
-	ind = init_index();
-	i = 0;
+// 	ind = init_index();
+// 	i = 0;
 
+// 	if (!(index_pairs	= ft_memalloc(3 * 1024)))
+// 		return ((t_index){NULL, NULL});
+// 	while (i < obj.max_vs)
+// 	{
+// 		j = 0;
+// 		while (j < obj.nb_vs_size[i])
+// 		{
+// 			j++;
+// 		}
+// 		i++;
+// 	}
 
-
-}
+// }
 
 int		main(int argc, char **argv)
 {
@@ -221,7 +233,7 @@ int		main(int argc, char **argv)
 
 	generate_vbo(&glstruct.vbo, points, sizeof(float) * max_4(obj.v.size, obj.vn.size, obj.vp.size, obj.vt.size) * 4);
 	generate_vao(&glstruct.vao, glstruct.vbo);
-	generate_ebo(&glstruct.ebo, (float*)indices[1], ft_max_vs(obj) * sizeof(int) * 3 * 3);
+	generate_ebo(&glstruct.ebo, (float*)indices[1], obj.max_vs * sizeof(int) * 3 * 3);
 
 	glstruct.shader_program = create_program();
 

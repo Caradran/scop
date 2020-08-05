@@ -123,15 +123,14 @@ int **faces_toa(t_obj obj)
 {
 	int i;
 	int **indices;
-	int max_vs;
 
 	i = 0;
-	max_vs = ft_max_vs(obj);
 
-	if (!(indices = ft_memalloc(sizeof(int*) * max_vs)))
+
+	if (!(indices = ft_memalloc(sizeof(int*) * obj.max_vs)))
 		return (NULL);
 	i = 0;
-	while (i < max_vs)
+	while (i < obj.max_vs)
 	{
 		indices[i] = faces_n_toa(obj, i + 2);
 		i++;
