@@ -132,7 +132,7 @@ void	print_indices(int **indices, t_obj obj)
 			k = 0;
 			while (k < (i + 2) * 3)
 			{
-				printf(" %d ", indices[i][j * (obj.nb_vs_size[i] + 1) * 3 + k]);
+				printf(" %d ", indices[i][j * (i + 2) * 3 + k]);
 				k++;
 			}
 			printf("\n");
@@ -172,30 +172,6 @@ void	set_max_vs(t_obj	*obj)
 	obj->nb_vs_size = nb_vs_size;
 }
 
-// t_index	create_index(int **indices, float *points, t_obj obj)
-// {
-// 	t_index ind;
-// 	int	*index_pairs;
-// 	int	i;
-// 	int	j;
-// 	int	k;
-
-// 	ind = init_index();
-// 	i = 0;
-
-// 	if (!(index_pairs	= ft_memalloc(3 * 1024)))
-// 		return ((t_index){NULL, NULL});
-// 	while (i < obj.max_vs)
-// 	{
-// 		j = 0;
-// 		while (j < obj.nb_vs_size[i])
-// 		{
-// 			j++;
-// 		}
-// 		i++;
-// 	}
-
-// }
 
 int		main(int argc, char **argv)
 {
