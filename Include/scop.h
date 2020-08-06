@@ -3,7 +3,7 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-# include "libft/include/libft.h"
+#include "../libft/include/libft.h"
 # include "get_next_line.h"
 # include <stdio.h>
 # define DEBUG 1
@@ -54,7 +54,9 @@ typedef struct	s_f
 typedef struct	s_index
 {
 	float		*verts;
-	int			*index;	
+	int			*index;
+	int			index_size;
+	int			size;
 }				t_index;
 
 typedef struct	s_obj

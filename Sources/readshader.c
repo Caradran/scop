@@ -1,6 +1,6 @@
 #include <OpenCL/opencl.h>
-#include "libft/include/libft.h"
-#include "get_next_line.h"
+#include "../libft/include/libft.h"
+#include "../Include/get_next_line.h"
 #include <stdlib.h>
 
 char	*concat(char **src)

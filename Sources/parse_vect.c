@@ -1,4 +1,4 @@
-#include "scop.h"
+#include "../Include/scop.h"
 
 static int size_num(char *str)
 {
@@ -147,7 +147,6 @@ static void parse_faces(char *buffer, t_f *f, t_obj *obj)
 {
 	int i;
 	int j;
-	int nb;
 	int checkflag;
 
 	if (DEBUG)
