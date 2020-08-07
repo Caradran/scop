@@ -289,26 +289,61 @@ int		setup_texture()
 	index++;
 	return (1);
 }
-
-void	rotate()
+int		*split_faces(int **indices, t_obj *obj)
 {
-	static float newAngle = 0;
-	glPushMatrix();
-	newAngle += 5;
-	glRotatef(newAngle, 1.0f, 0.0f, 0.0f);
+	int i;
+	int j;
+	int size;
+	int size_malloc;
+	int *ret;
+	int *tmp;
 
-    glBegin(GL_LINES);
-    glColor3f (0.0, 1.0, 0.0); // Green for x axis
-    glVertex3f(0,0,0);
-    glVertex3f(10,0,0);
-    glColor3f(1.0,0.0,0.0); // Red for y axis
-    glVertex3f(0,0,0);
-    glVertex3f(0,10,0);
-    glColor3f(0.0,0.0,1.0); // Blue for z axis
-    glVertex3f(0,0,0); 
-    glVertex3f(0,0,10);
-    glEnd();
-	glPopMatrix();
+	i = 1;
+	size_malloc = 0;
+	while (i < obj->max_vs)
+	{
+		size_malloc += obj->nb_vs_size[i] * 3 * i;
+		i++;
+	}
+	if (!(ret = ft_memalloc(size_malloc * sizeof(int))))
+		return (NULL);
+	/* Save the old face */
+	ft_memcpy(ret, indices[1], obj->nb_vs_size[1] * 3);
+	/* Split */
+	int currentpos;
+	int save[3];
+	int old;
+	currentpos = obj->nb_vs_size[1] * 3;
+	printf("Current Before : %d\n", currentpos / 3);
+	i = 0;
+	while (++i < obj->max_vs)
+	{
+		j = -1;
+		save[0] = indices[i][0];
+		save[1] = indices[i][1 * (i + 2)];
+		save[2] = indices[i][2 * (i + 2)];
+		while (++j < obj->nb_vs_size[i])
+		{
+			ret[currentpos] = save[0];
+			ret[currentpos + 1] = indices[i][j + 1];
+			ret[currentpos + 1] = indices[i][j + 2];
+			ret[currentpos + 3] = save[1];
+			ret[currentpos + 4] = indices[i][j + 1 + (j * 4)];
+			ret[currentpos + 5] = indices[i][j + 2 + (j * 4)];
+			ret[currentpos + 6] = save[2];
+			ret[currentpos + 7] = indices[i][j + 1 + ((j + 1) * 4)];
+			ret[currentpos + 8] = indices[i][j + 2 + ((j + 1) * 4)];
+			currentpos += 9;
+		}
+		printf("Current Before [%d] : %d\n", i, currentpos / 3);
+	}
+	printf("Current : %d\n", currentpos / 3);
+	obj->nb_vs_size[1] = currentpos / 3;
+	obj->nb_vs_size[0] = 0;
+	i = 1;
+	while (++i < obj->max_vs)
+		obj->nb_vs_size[i] = 0;
+	return (ret);
 }
 
 int		main(int argc, char **argv)
@@ -335,8 +370,13 @@ int		main(int argc, char **argv)
 	indices = faces_toa(obj);
 	printf("coucou\n");
 	points = vect_toa(obj);
-
+	printf("Split Face\n");
+	indices[1] = split_faces(indices, &obj);
+	//free(indices[1]);
+	//indices[1] = tmp;
+	printf("Done\n");
 	ret = create_vert(obj, indices, points);
+	printf("Vert\n");
 	if (!ret.index || !ret.verts)
 	{
 		printf("Index ou Verts non malloc\n (FAUT TOUT FREE SA MERE)\n");
@@ -367,7 +407,6 @@ int		main(int argc, char **argv)
 		// wipe the drawing surface clear
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		rotate();
 		glUseProgram(glstruct.shader_program);
 		glBindVertexArray(glstruct.vao);
 		// draw points 0-3 from the currently bound VAO with current in-use shader
