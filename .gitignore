@@ -3,3 +3,4 @@
 scop
 *.a
 libft/objs/*.o
+*.dSYM
