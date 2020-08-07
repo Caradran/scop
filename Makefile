@@ -1,2 +1,34 @@
-all :
-	cc -g3 `pkg-config --cflags glfw3 glew` main.c to_array.c utils.c get_next_line.c init_parse.c parse_vect.c print_struct.c readshader.c parse.c scop.h libft/libft.a `pkg-config --static --libs glfw3 glew` -framework Cocoa -framework OpenGL
+
+NAME			= scop
+
+HEADER 			= $(shell find Include -type f) 
+
+SRC_PATH		= $(shell find Sources -type d)
+
+INC_PATH 		= $(shell find Include -type d) $(shell find libft -type d)
+
+SRC_PATH		= $(addprefix Sources/, $(SRC))
+
+SRC				=	main.c				\
+					to_array.c			\
+					utils.c				\
+					get_next_line.c		\
+					init_parse.c		\
+					parse_vect.c		\
+					print_struct.c		\
+					readshader.c		\
+					parse.c				\
+
+FRAMEWORK		=	Cocoa OpenGL
+
+PKG				=	glfw3 glew
+
+CC				=	cc -g3
+
+CFLAG			=	
+#-Wall -Wextra -Werror
+
+all: 
+	@echo "relink !"
+	@$(CC) $(CFLAG) `pkg-config --cflags $(PKG)` $(SRC_PATH) libft/libft.a libft/include/libft.h Include/scop.h Include/get_next_line.h `pkg-config --static --libs $(PKG)` $(foreach fmw, $(FRAMEWORK), -framework $(fmw))
+	@mv a.out scop

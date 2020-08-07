@@ -1,4 +1,4 @@
-#include "scop.h"
+#include "../Include/scop.h"
 
 void	print_vert(t_vert vert, int type)
 {

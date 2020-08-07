@@ -1,4 +1,4 @@
-#include "scop.h"
+#include "../Include/scop.h"
 
 // ssot = size, step, offset, type
 void	fill_ret(float **ret, int ssot[4], float *vert)

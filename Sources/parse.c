@@ -1,4 +1,4 @@
-#include "scop.h"
+#include "../Include/scop.h"
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>

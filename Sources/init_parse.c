@@ -1,4 +1,4 @@
-#include "scop.h"
+#include "../Include/scop.h"
 
 t_vert	init_vert(void)
 {

@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "scop.h"
+#include "../Include/scop.h"
 
 char	*readshad(char *source, int *i);
 
@@ -54,7 +54,6 @@ void	generate_ebo(GLuint *ebo, float points[], int len)
 	glGenBuffers(1, ebo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, *ebo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, len * sizeof(float), points, GL_STATIC_DRAW); 
-
 }
 
 void	generate_vao(GLuint *vao, GLuint vbo)
@@ -173,6 +172,74 @@ void	set_max_vs(t_obj	*obj)
 }
 
 
+int				find_point(float *point, float tmp[13],int max)
+{
+	int	i;
+
+	i = -1;
+	while (++i < max)
+		if (!(ft_memcmp(&(point[i * 13]), tmp, 13)))
+			return (i);
+	return (0);
+}
+
+void			fill_tmp(float (*tmp)[13], int **indices, float *points, int i)
+{
+	int	index;
+
+	index = -1;
+	while (++index < 4)
+	{ 
+		(*tmp)[index] = points[(indices[1][i] * 13) + index];
+	}
+	index = -1;
+	while (++index < 3)
+	{ 
+		(*tmp)[index + 4] = points[(indices[1][i + 3] * 13) + index + 4];
+	}
+
+	index = -1;
+	while (++index < 3)
+	{ 
+		(*tmp)[index + 7] = points[(indices[1][i + 6] * 13) + index + 7];
+	}
+	index = -1;
+	while (++index < 3)
+	{
+		(*tmp)[index + 10] = 0;
+	}
+}
+
+t_index			create_vert(t_obj obj, int **indices, float *points)
+{
+	t_index		ret;
+	float		tmp[13];
+	int			size;
+	int			i;
+	int			find;
+
+	if (!(ret.verts = malloc(sizeof(t_index) * obj.nb_vs_size[1] * 3 * 13)))
+		return ((t_index){NULL, NULL});
+	if (!(ret.index = malloc(sizeof(t_index) * obj.nb_vs_size[1] * 3)))
+		return ((t_index){NULL, NULL});
+	i = -1;
+	size = 0;
+	while (++i < obj.nb_vs_size[1] * 3)
+	{
+		fill_tmp(&tmp, indices, points, (i % 3) + ((i / 3) * 9));
+		if (!(find = find_point(ret.verts, tmp, size)))
+		{
+			ft_memcpy(&(ret.verts[size * 13]), tmp, 13 * 4);
+			find = size;
+			size += 1;
+		}
+		ret.index[i] = find;
+	}
+	ret.size = size;
+	ret.index_size = i;
+	return (ret);
+}
+
 int		main(int argc, char **argv)
 {
 	t_glstruct	glstruct;
@@ -181,6 +248,7 @@ int		main(int argc, char **argv)
 	float		*points;
 
 	int 		**indices;
+	t_index		ret;
 
 
 	if (argc == 1)
@@ -197,6 +265,12 @@ int		main(int argc, char **argv)
 	printf("coucou\n");
 	points = vect_toa(obj);
 
+	ret = create_vert(obj, indices, points);
+	if (!ret.index || !ret.verts)
+	{
+		printf("Index ou Verts non malloc\n (FAUT TOUT FREE SA MERE)\n");
+		return (-1);
+	}
 	if (DEBUG)
 	{
 		print_indices(indices, obj);
@@ -205,11 +279,13 @@ int		main(int argc, char **argv)
 		printf("Renderer: %s\n", renderer);
 		printf("OpenGL version supported %s\n", version);
 	}
-
-
-	generate_vbo(&glstruct.vbo, points, sizeof(float) * max_4(obj.v.size, obj.vn.size, obj.vp.size, obj.vt.size) * 4);
+	
+	// for (int i = 0; i < ret.index_size; i++)
+	// 	printf("=> %d\n", ret.index[i]);
+	// printf("%d\t%d\n", ret.size, ret.index_size);
+	generate_vbo(&glstruct.vbo, ret.verts, sizeof(float) * ret.size * 13);
 	generate_vao(&glstruct.vao, glstruct.vbo);
-	generate_ebo(&glstruct.ebo, (float*)indices[1], obj.max_vs * sizeof(int) * 3 * 3);
+	generate_ebo(&glstruct.ebo, (float*)ret.index, (ret.index_size) * sizeof(int));
 
 	glstruct.shader_program = create_program();
 
@@ -222,7 +298,7 @@ int		main(int argc, char **argv)
 		glBindVertexArray(glstruct.vao);
 		// draw points 0-3 from the currently bound VAO with current in-use shader
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, glstruct.ebo);
-		glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, ret.index_size, GL_UNSIGNED_INT, 0);
 		// glDrawArrays(GL_TRIANGLES, 1, 4);
 		// update other events like input handling
 		glfwPollEvents();
