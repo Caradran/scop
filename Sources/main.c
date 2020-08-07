@@ -65,6 +65,8 @@ void	generate_vao(GLuint *vao, GLuint vbo)
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE,13 * sizeof(GLfloat), (void *)(4 * sizeof(GLfloat)));
 	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE,13 * sizeof(GLfloat), (void *)(7 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(2);
 }
 
 GLuint	ft_shader(char *name, GLenum shader_type)
@@ -210,28 +212,25 @@ int				find_point(float *point, float tmp[13],int max)
 void			fill_tmp(float (*tmp)[13], int **indices, float *points, int i)
 {
 	int	index;
+	int save;
 
 	index = -1;
 	while (++index < 4)
-	{ 
 		(*tmp)[index] = points[(indices[1][i] * 13) + index];
-	}
+	save = (indices[1][i] * 13);
 	index = -1;
 	while (++index < 3)
-	{ 
 		(*tmp)[index + 4] = points[(indices[1][i + 3] * 13) + index + 4];
-	}
-
 	index = -1;
 	while (++index < 3)
-	{ 
-		(*tmp)[index + 7] = points[(indices[1][i + 6] * 13) + index + 7];
-	}
+		(*tmp)[index + 7] = points[(indices[1][i + 6] * 13) + index + 10];
 	index = -1;
 	while (++index < 3)
-	{
 		(*tmp)[index + 10] = 0;
-	}
+	index = 4;
+	while (++index < 13)
+		if ((*tmp)[index] == -1)
+			(*tmp)[index] = points[save + ((index - 4) % 3)];
 }
 
 t_index			create_vert(t_obj obj, int **indices, float *points)
@@ -262,6 +261,54 @@ t_index			create_vert(t_obj obj, int **indices, float *points)
 	ret.size = size;
 	ret.index_size = i;
 	return (ret);
+}
+
+int		setup_texture()
+{
+	static int	index = 0;
+	t_tga		*texture;
+	int			index_txt;
+	GLuint		textureID;
+
+	if (!(texture = load_tga("Jinx_split.tga")))
+		return (0);
+
+	for (int i = 0; i < texture->w * texture->h; i++)
+		((unsigned int *)texture->data)[i] = ((((unsigned int *)texture->data)[i] & 0xFF) << 24) +
+											((((unsigned int *)texture->data)[i] & 0xFF00) >> 8) +
+											((((unsigned int *)texture->data)[i] & 0xFF0000) >> 8) + 
+											((((unsigned int *)texture->data)[i] & 0xFF000000) >> 8);
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	glTexImage2D(GL_TEXTURE_2D, 0,GL_RGBA, texture->w, texture->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture->data);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	index++;
+	return (1);
+}
+
+void	rotate()
+{
+	static float newAngle = 0;
+	glPushMatrix();
+	newAngle += 5;
+	glRotatef(newAngle, 1.0f, 0.0f, 0.0f);
+
+    glBegin(GL_LINES);
+    glColor3f (0.0, 1.0, 0.0); // Green for x axis
+    glVertex3f(0,0,0);
+    glVertex3f(10,0,0);
+    glColor3f(1.0,0.0,0.0); // Red for y axis
+    glVertex3f(0,0,0);
+    glVertex3f(0,10,0);
+    glColor3f(0.0,0.0,1.0); // Blue for z axis
+    glVertex3f(0,0,0); 
+    glVertex3f(0,0,10);
+    glEnd();
+	glPopMatrix();
 }
 
 int		main(int argc, char **argv)
@@ -303,14 +350,16 @@ int		main(int argc, char **argv)
 		printf("Renderer: %s\n", renderer);
 		printf("OpenGL version supported %s\n", version);
 	}
-	
-	// for (int i = 0; i < ret.index_size; i++)
-	// 	printf("=> %d\n", ret.index[i]);
-	// printf("%d\t%d\n", ret.size, ret.index_size);
+
 	generate_vbo(&glstruct.vbo, ret.verts, sizeof(float) * ret.size * 13);
 	generate_vao(&glstruct.vao, glstruct.vbo);
 	generate_ebo(&glstruct.ebo, (float*)ret.index, (ret.index_size) * sizeof(int));
 
+	if (!setup_texture())
+	{
+		ft_putendl("Error Mallocated TGA file\n");
+		return (-1);
+	}
 	glstruct.shader_program = create_program();
 
 	while (!glfwWindowShouldClose(glstruct.window))
@@ -318,6 +367,7 @@ int		main(int argc, char **argv)
 		// wipe the drawing surface clear
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		rotate();
 		glUseProgram(glstruct.shader_program);
 		glBindVertexArray(glstruct.vao);
 		// draw points 0-3 from the currently bound VAO with current in-use shader
