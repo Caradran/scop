@@ -2,3 +2,4 @@
 *.o
 scop
 *.a
+libft/objs/*.o

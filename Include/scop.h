@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 #include "../libft/include/libft.h"
 # include "get_next_line.h"
+# include "../Tga_Reader/includes/tga_reader.h"
 # include <stdio.h>
 # define DEBUG 1
 # define IS_NUM(x) ((x >= '0' && x <= '9') || x == '-' || x == '.')

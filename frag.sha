@@ -1,10 +1,14 @@
 #version 400
 
 in vec3 our_color;
+in vec2 UV;
 
 out vec4 frag_color;
 
+uniform sampler2D myTextureSampler;
+
 void main()
 {
-	frag_color = vec4(our_color, 1.0f);
+	//frag_color = vec4(our_color, 1.0f);
+	frag_color = texture(myTextureSampler, UV);
 }
