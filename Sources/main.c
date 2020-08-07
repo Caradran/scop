@@ -173,30 +173,6 @@ void	set_max_vs(t_obj	*obj)
 	obj->nb_vs_size = nb_vs_size;
 }
 
-// t_index	create_index(int **indices, float *points, t_obj obj)
-// {
-// 	t_index ind;
-// 	int	*index_pairs;
-// 	int	i;
-// 	int	j;
-// 	int	k;
-
-// 	ind = init_index();
-// 	i = 0;
-
-// 	if (!(index_pairs	= ft_memalloc(3 * 1024)))
-// 		return ((t_index){NULL, NULL});
-// 	while (i < obj.max_vs)
-// 	{
-// 		j = 0;
-// 		while (j < obj.nb_vs_size[i])
-// 		{
-// 			j++;
-// 		}
-// 		i++;
-// 	}
-
-// }
 
 int				find_point(float *point, float tmp[13],int max)
 {
