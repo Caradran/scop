@@ -13,8 +13,8 @@
 #ifndef VECTORS_H
 # define VECTORS_H
 
-# include "../libft/libft.h"
-// # include <math.h>
+# include "../libft/include/libft.h"
+# include <math.h>
 # include <stdio.h>
 
 typedef struct	s_vec2
@@ -188,7 +188,9 @@ t_mat			rot_mat(t_vec3 v, double theta);
 t_mat3			rot_mat3(t_vec3 v, double theta);
 t_mat4			rot_mat4(t_vec3 v, double theta);
 
-
+// mat_to_a.c
+double *mat4_to_a(t_mat4 mat);
+double *mat3_to_a(t_mat3 mat);
 
 
 #endif

@@ -23,16 +23,25 @@ SRC				=	main.c							\
 					parsing/parse_vect.c			\
 					parsing/readshader.c			\
 					parsing/to_array.c				\
+					vectors/mat_add.c				\
+					vectors/mat_init.c				\
+					vectors/mat_mult.c				\
+					vectors/mat_print.c				\
+					vectors/mat_scale.c				\
+					vectors/mat_spe.c				\
+					vectors/mat_sub.c				\
+					vectors/mat_to_a.c				\
 					vectors/vec_add.c				\
 					vectors/vec_free.c				\
+					vectors/vec_get_value.c			\
 					vectors/vec_init.c				\
 					vectors/vec_mult.c				\
 					vectors/vec_mult_mat.c			\
 					vectors/vec_norm.c				\
+					vectors/vec_normalize.c			\
 					vectors/vec_print.c				\
 					vectors/vec_rot.c				\
 					vectors/vec_scale.c				\
-					vectors/vec_spe_mat.c			\
 					vectors/vec_sub.c				\
 					vertex/opti_vertex.c			\
 					vertex/setup_vs_max.c			\
