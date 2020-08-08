@@ -12,7 +12,7 @@
 
 #include "../../Include/vectors.h"
 
-t_vec2	mult_v2(t_vec2 a, t_vec2 b)
+t_vec2	mult_vec2(t_vec2 a, t_vec2 b)
 {
 	t_vec2 c;
 
@@ -21,7 +21,7 @@ t_vec2	mult_v2(t_vec2 a, t_vec2 b)
 	return (c);
 }
 
-t_vec3	mult_v3(t_vec3 a, t_vec3 b)
+t_vec3	mult_vec3(t_vec3 a, t_vec3 b)
 {
 	t_vec3 c;
 
@@ -31,24 +31,18 @@ t_vec3	mult_v3(t_vec3 a, t_vec3 b)
 	return (c);
 }
 
-t_mat	mult_mat(t_mat a, t_mat b)
+t_vec4 mult_vec4(t_vec4 a, t_vec4 b)
 {
-	int			i;
-	int			j;
-	int			k;
-	t_mat		c;
+	t_vec3 c;
 
-	if ((a.w != b.h) || !((c = init_mat(a.h, b.w)).mat))
-		return ((t_mat){-1, -1, NULL});
-	i = -1;
-	while (++i < a.w && (j = -1))
-		while (++j < b.h && (k = -1))
-			while (++k < a.h)
-				c.mat[i][j] += a.mat[i][k] * b.mat[k][j];
+	c.x = a.x * b.x;
+	c.y = a.y * b.y;
+	c.z = a.z * b.z;
+	c.w = a.w * b.w;
 	return (c);
 }
 
-t_vec	mult_v(t_vec a, t_vec b)
+t_vec	vec_mult(t_vec a, t_vec b)
 {
 	t_vec	c;
 	int		i;
