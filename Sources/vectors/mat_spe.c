@@ -59,7 +59,7 @@ t_mat	rot_mat(t_vec3 v, double theta)
 
 t_mat3	rot_mat3(t_vec3 v, double theta)
 {
-	t_mat rot;
+	t_mat3 rot;
 	double c;
 	double mc;
 	double s;
@@ -81,7 +81,7 @@ t_mat3	rot_mat3(t_vec3 v, double theta)
 
 t_mat4	rot_mat4(t_vec3 v, double theta)
 {
-	t_mat rot;
+	t_mat4 rot;
 	double c;
 	double mc;
 	double s;

@@ -7,7 +7,7 @@ void	print_mat3(t_mat3 a)
 	int			k;
 
 
-	printf("mat 3 :\n")
+	printf("mat 3 :\n");
 	i = -1;
 	while (++i < 3 && (j = -1))
 	{
@@ -17,7 +17,7 @@ void	print_mat3(t_mat3 a)
 		}
 		printf("\n");
 	}
-	return (c);
+	return ;
 }
 
 void	print_mat4(t_mat4 a)
@@ -27,7 +27,7 @@ void	print_mat4(t_mat4 a)
 	int			k;
 
 
-	printf("mat 4 :\n")
+	printf("mat 4 :\n");
 	i = -1;
 	while (++i < 4 && (j = -1))
 	{
@@ -37,7 +37,7 @@ void	print_mat4(t_mat4 a)
 		}
 		printf("\n");
 	}
-	return (c);
+	return ;
 }
 
 void	print_mat(t_mat a)
@@ -47,7 +47,10 @@ void	print_mat(t_mat a)
 	t_mat		c;
 
 	if ((a.w <= 0) || (a.h <= 0))
-		return (printf("cannot print matrice\n"););
+	{
+		printf("cannot print matrice\n");
+		return ;
+	}
 	i = -1;
 	while (++i < a.w && (j = -1))
 	{
@@ -55,5 +58,5 @@ void	print_mat(t_mat a)
 			printf("%5lf ", a.mat[i][j]);
 		printf("\n");
 	}
-	return (c);
+	return ;
 }

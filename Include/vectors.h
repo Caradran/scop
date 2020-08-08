@@ -99,16 +99,16 @@ t_vec4 			mult_vec4(t_vec4 a, t_vec4 b);
 t_vec			mult_vec(t_vec a, t_vec b);
 
 // mat_mult.c
-t_mat			mult_mat3(t_mat3 a, t_mat3 b);
-t_mat			mult_mat4(t_mat4 a, t_mat4 b);
+t_mat3			mult_mat3(t_mat3 a, t_mat3 b);
+t_mat4			mult_mat4(t_mat4 a, t_mat4 b);
 t_mat			mult_mat(t_mat a, t_mat b);
 
 //	vec_mult_mat.c
 t_vec2			mult_mat_v2(t_vec2 a, t_mat b);
 t_vec3			mult_mat_v3(t_vec3 a, t_mat b);
-t_vec4			mult_mat_v4(t_vec3 a, t_mat b);
+t_vec4			mult_mat_v4(t_vec4 a, t_mat b);
 t_vec3			mult_mat3_v3(t_vec3 a, t_mat3 b);
-t_vec4			mult_mat4_v4(t_vec3 a, t_mat4 b);
+t_vec4			mult_mat4_v4(t_vec4 a, t_mat4 b);
 t_vec			mult_mat_v(t_vec a, t_mat b);
 
 
@@ -140,13 +140,13 @@ t_mat			sub_mat(t_mat a, t_mat b);
 // vec_scale.c
 t_vec2			scale_v2(double a, t_vec2 b);
 t_vec3			scale_v3(double a, t_vec3 b);
-t_vec4			scale_v4(double a, t_vec3 b);
+t_vec4			scale_v4(double a, t_vec4 b);
 t_vec			scale_v(double a, t_vec b);
 
 // mat_scale.c
-t_mat3	scale_mat3(double a, t_mat3 b);
-t_mat4	scale_mat4(double a, t_mat4 b);
-t_mat	scale_mat(double a, t_mat b);
+t_mat3			scale_mat3(double a, t_mat3 b);
+t_mat4			scale_mat4(double a, t_mat4 b);
+t_mat			scale_mat(double a, t_mat b);
 
 // vec_normalize.c
 t_vec2			normalize_v2(t_vec2 a);

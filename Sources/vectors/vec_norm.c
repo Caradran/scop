@@ -24,5 +24,5 @@ double	norme_v3(t_vec3 a)
 
 double	norme_v4(t_vec4 a)
 {
-	return (sqrt(a.x * a.x + a.y * a.y + a.z * a.z, a.w * a.w));
+	return (sqrt(a.x * a.x + a.y * a.y + a.z * a.z + a.w * a.w));
 }

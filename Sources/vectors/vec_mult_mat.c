@@ -76,10 +76,10 @@ t_vec4	mult_mat_v4(t_vec4 b, t_mat a)
 		return ((t_vec4){NAN, NAN, NAN, NAN});
 	while (++j < 4)
 	{
-		c.x += a.mat[j][0] * get_value_vec3(b, j);
-		c.y += a.mat[j][1] * get_value_vec3(b, j);
-		c.z += a.mat[j][2] * get_value_vec3(b, j);
-		c.w += a.mat[j][3] * get_value_vec3(b, j);
+		c.x += a.mat[j][0] * get_value_vec4(b, j);
+		c.y += a.mat[j][1] * get_value_vec4(b, j);
+		c.z += a.mat[j][2] * get_value_vec4(b, j);
+		c.w += a.mat[j][3] * get_value_vec4(b, j);
 	}
 	return (c);
 }
@@ -93,10 +93,10 @@ t_vec4	mult_mat4_v4(t_vec4 b, t_mat4 a)
 	c = init_v4(0, 0, 0, 0);
 	while (++j < 4)
 	{
-		c.x += a.mat[j][0] * get_value_vec3(b, j);
-		c.y += a.mat[j][1] * get_value_vec3(b, j);
-		c.z += a.mat[j][2] * get_value_vec3(b, j);
-		c.w += a.mat[j][3] * get_value_vec3(b, j);
+		c.x += a.mat[j][0] * get_value_vec4(b, j);
+		c.y += a.mat[j][1] * get_value_vec4(b, j);
+		c.z += a.mat[j][2] * get_value_vec4(b, j);
+		c.w += a.mat[j][3] * get_value_vec4(b, j);
 	}
 	return (c);
 }

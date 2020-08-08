@@ -31,9 +31,10 @@ t_vec	scale_v(double a, t_vec b)
 {
 	int i;
 
-	if (size <= 0)
+	if (b.size <= 0)
 		return ((t_vec){-1, NULL});
 	i = -1;
-	while (++i < size)
+	while (++i < b.size)
 		b.vec[i] *= a;
+	return (b);
 }

@@ -49,15 +49,15 @@ t_vec4	rot_vec4(t_vec4 v, double theta, t_vec3 axis)
 
 t_vec4	rot_vec4_x(t_vec4 v, double theta)
 {
-	return (mult_mat4_v4(v, rot_mat4(init_v4(1, 0, 0, 1), theta)));
+	return (mult_mat4_v4(v, rot_mat4(init_v3(1, 0, 0), theta)));
 }
 
 t_vec4	rot_vec4_y(t_vec4 v, double theta)
 {
-	return (mult_mat4_v4(v, rot_mat4(init_v4(0, 1, 0, 1), theta)));
+	return (mult_mat4_v4(v, rot_mat4(init_v3(0, 1, 0), theta)));
 }
 
 t_vec4	rot_vec4_z(t_vec4 v, double theta)
 {
-	return (mult_mat4_v4(v, rot_mat4(init_v4(0, 0, 1, 1), theta)));
+	return (mult_mat4_v4(v, rot_mat4(init_v3(0, 0, 1), theta)));
 }

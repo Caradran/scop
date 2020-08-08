@@ -13,7 +13,7 @@ double *mat4_to_a(t_mat4 mat)
 	{
 		j = -1;
 		while (++j < 4)
-			ret[i * 4 + j] = mat[i][j];
+			ret[i * 4 + j] = mat.mat[i][j];
 	}
 	return (ret);
 }
@@ -31,7 +31,7 @@ double *mat3_to_a(t_mat3 mat)
 	{
 		j = -1;
 		while (++j < 3)
-			ret[i * 3 + j] = mat[i][j];
+			ret[i * 3 + j] = mat.mat[i][j];
 	}
 	return (ret);
 }
