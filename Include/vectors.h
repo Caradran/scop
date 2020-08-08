@@ -14,7 +14,7 @@
 # define VECTORS_H
 
 # include "libft.h"
-# include <math.h>
+// # include <math.h>
 # include <stdio.h>
 
 typedef struct	s_vec2
