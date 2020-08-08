@@ -101,3 +101,25 @@ t_mat4	rot_mat4(t_vec3 v, double theta)
 	rot.mat[2][1] = v.z * v.y * mc + v.x * s;
 	return (rot);
 }
+
+t_mat4	translation_mat4(t_vec3 v)
+{
+	t_mat4 ret;
+
+	ret = init_mat4();
+	ret.mat[0][3] = v.x;
+	ret.mat[1][3] = v.y;
+	ret.mat[2][3] = v.z;
+	return (ret);
+}
+
+t_mat4 scaling_mat4(t_vec3 v)
+{
+	t_mat4 ret;
+
+	ret = init_mat4();
+	ret.mat[0][0] = v.x;
+	ret.mat[1][1] = v.y;
+	ret.mat[2][2] = v.z;
+	return (ret);
+}

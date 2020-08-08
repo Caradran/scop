@@ -181,6 +181,10 @@ t_vec4			rot_vec4_x(t_vec4 v, double theta);
 t_vec4			rot_vec4_y(t_vec4 v, double theta);
 t_vec4			rot_vec4_z(t_vec4 v, double theta);
 
+t_mat4			translation_mat4(t_vec3 v);
+t_mat4			scaling_mat4(t_vec3 v);
+
+
 //mat_spe.c
 
 t_mat			init_id_mat(int w);

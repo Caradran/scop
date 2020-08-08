@@ -2,6 +2,35 @@
 #include <stdlib.h>
 #include "../Include/scop.h"
 
+
+void	transformations(t_glstruct glstruct)
+{
+	t_mat4	ret;
+	t_vec3	rot_vec;
+	t_vec3	scale_vec;
+	float	test[16];
+
+	ret = init_mat4();
+	rot_vec = init_v3(0, 0, 1);
+	// scale_vec = init_v3(0.5, 0.5, 0.5);
+	ret = mult_mat4(ret, rot_mat4(rot_vec, M_PI/4.0));
+	// ret = mult_mat4(ret, scaling_mat4(scale_vec));
+
+	int i = -1;
+	while (++i < 16)
+	{
+		if (!(i % 4))
+			printf("\n");
+		printf("%f ", (float)(mat4_to_a(ret))[i]);
+		test[i] = (float)(mat4_to_a(ret))[i];
+	}
+	printf("\n");
+
+	glUseProgram(glstruct.shader_program);
+	unsigned int transformLoc = glGetUniformLocation(glstruct.shader_program, "transform");
+	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, (GLfloat*)test);
+}
+
 int		main(int argc, char **argv)
 {
 	t_glstruct	glstruct;
@@ -29,7 +58,7 @@ int		main(int argc, char **argv)
 
 	index_split.index = split_faces(indices, &obj);
 	print_index_nb("splited",index_split.index, obj.nb_vs_size[1] * 9, 9);
-	printf("~~~~~~~~~~~~Verts~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+	printf("~~~~~~~~~~~~Verts~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 	ret = create_vert(obj, index_split.index, points);
 	print_index_nb("Vertex",index_split.index, obj.nb_vs_size[1] * 9, 9);
 	if (!ret.index || !ret.verts)
@@ -37,7 +66,7 @@ int		main(int argc, char **argv)
 		printf("Index ou Verts non malloc\n (FAUT TOUT FREE SA MERE)\n");
 		return (-1);
 	}
-	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 	if (DEBUG)
 	{
 		const GLubyte* renderer = glGetString(GL_RENDERER); // get renderer string
@@ -51,15 +80,20 @@ int		main(int argc, char **argv)
 	generate_vao(&glstruct.vao, glstruct.vbo);
 	generate_ebo(&glstruct.ebo, (float*)ret.index, (ret.index_size) * sizeof(int));
 
-	printf("~~~~~~~~~~~~~~~~TEXTURE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+
+	printf("~~~~~~~~~~~~~~~~TEXTURE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 	if (!setup_texture())
 	{
 		ft_putendl("Error Mallocated TGA file\n");
 		return (-1);
 	}
-	printf("~~~~~~~~~~~~~~~~SHADER~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+	printf("~~~~~~~~~~~~~~~~SHADER~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 	glstruct.shader_program = create_program();
-	printf("~~~~~~~~~~~~~~~~LOOP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+
+	printf("~~~~~~~~~~~~~~~~TRANSFORMATIONS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+	transformations(glstruct);
+
+	printf("~~~~~~~~~~~~~~~~LOOP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 	while (!glfwWindowShouldClose(glstruct.window))
 	{
 		// wipe the drawing surface clear
