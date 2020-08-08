@@ -1,4 +1,4 @@
-#include "vectors.h"
+#include "../../Include/vectors.h"
 
 t_mat	mult_mat(t_mat a, t_mat b)
 {
