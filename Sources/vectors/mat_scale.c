@@ -1,4 +1,4 @@
-#include "vectors.h"
+#include "../../Include/vectors.h"
 
 t_mat3	scale_mat3(double a, t_mat3 b)
 {

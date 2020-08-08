@@ -1,4 +1,4 @@
-#include "vectors.h"
+#include "../../Include/vectors.h"
 
 void	print_mat3(t_mat3 a)
 {

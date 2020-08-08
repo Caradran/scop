@@ -1,4 +1,4 @@
-#include "vectors.h"
+#include "../../Include/vectors.h"
 
 t_vec2	normalize_v2(t_vec2 a)
 {

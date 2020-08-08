@@ -1,4 +1,4 @@
-#include "vectors.h"
+#include "../../Include/vectors.h"
 
 t_mat	init_mat(int w, int h)
 {

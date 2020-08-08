@@ -1,4 +1,4 @@
-#include "vectors.h"
+#include "../../Include/vectors.h"
 
 t_mat3	sub_mat3(t_mat3 a, t_mat3 b)
 {
