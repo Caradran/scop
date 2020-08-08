@@ -34,7 +34,7 @@ void	init_glew(void)
 	glewExperimental = GL_TRUE;
 	if ((err = glewInit()) != GLEW_OK)
 	{
-		printf("%s\n", glewGetErrorString(err));
+		//printf("%s\n", glewGetErrorString(err));
 		glfwTerminate();
 		exit(1);
 	}
@@ -77,7 +77,7 @@ GLuint	ft_shader(char *name, GLenum shader_type)
 	GLint success;
     GLchar infoLog[512];
 
-	printf("%s\n", shader);
+	//printf("%s\n", shader);
 	sha = glCreateShader(shader_type);
 	glShaderSource(sha, 1, &shader, NULL);
 	glCompileShader(sha);
@@ -182,7 +182,7 @@ int				find_point(float *point, float tmp[13],int max)
 	while (++i < max)
 		if (!(ft_memcmp(&(point[i * 13]), tmp, 13)))
 			return (i);
-	return (0);
+	return (-1);
 }
 
 void			fill_tmp(float (*tmp)[13], int *indices, float *points, int i)
@@ -226,7 +226,7 @@ t_index			create_vert(t_obj obj, int *index, float *points)
 	while (++i < obj.nb_vs_size[1] * 3)
 	{
 		fill_tmp(&tmp, index, points, (i % 3) + ((i / 3) * 9));
-		if (!(find = find_point(ret.verts, tmp, size)))
+		if ((find = find_point(ret.verts, tmp, size)) == -1)
 		{
 			ft_memcpy(&(ret.verts[size * 13]), tmp, 13 * 4);
 			find = size;
@@ -248,8 +248,7 @@ int		setup_texture()
 
 	if (!(texture = load_tga("Jinx_split.tga")))
 		return (0);
-
-	for (int i = 0; i < texture->w * texture->h; i++)
+	for (int i = 0; i < (texture->w * texture->h) - 1; i++)
 		((unsigned int *)texture->data)[i] = ((((unsigned int *)texture->data)[i] & 0xFF) << 24) +
 											((((unsigned int *)texture->data)[i] & 0xFF00) >> 8) +
 											((((unsigned int *)texture->data)[i] & 0xFF0000) >> 8) + 
@@ -283,7 +282,6 @@ int		*split_faces(int **indices, t_obj *obj)
 	}
 	if (!(ret = ft_memalloc(size_malloc * sizeof(int) * 3)))
 		return (NULL);
-	ft_memset(ret, 32, size_malloc * 4 * 9);
 	/* Save the old face */
 	if (obj->nb_vs_size[1])
 		ft_memcpy(ret, indices[1], obj->nb_vs_size[1] * 9 * 4);
@@ -293,9 +291,9 @@ int		*split_faces(int **indices, t_obj *obj)
 	int old;
 	int k;
 	int ligne;
-	currentpos = obj->nb_vs_size[1] * 3;
-	printf("Current Before : %d\n", currentpos / 3);
-	i = 0;
+
+	currentpos = obj->nb_vs_size[1] * 9;
+	i = 1;
 	while (++i < obj->max_vs)
 	{
 		ligne = (i + 2) * 3;
@@ -312,11 +310,11 @@ int		*split_faces(int **indices, t_obj *obj)
 				ret[currentpos + 1] = indices[i][(j * ligne) + (k + 1)];
 				ret[currentpos + 2] = indices[i][(j * ligne) + (k + 2)];
 				ret[currentpos + 3] = save[1];
-				ret[currentpos + 4] = indices[i][(j * ligne) + (k + 1)];
-				ret[currentpos + 5] = indices[i][(j * ligne) + (k + 2)];
+				ret[currentpos + 4] = indices[i][(j * ligne) + (k + 1) + (i + 2)];
+				ret[currentpos + 5] = indices[i][(j * ligne) + (k + 2) + (i + 2)];
 				ret[currentpos + 6] = save[2];
-				ret[currentpos + 7] = indices[i][(j * ligne) + (k + 1)];
-				ret[currentpos + 8] = indices[i][(j * ligne) + (k + 2)];
+				ret[currentpos + 7] = indices[i][(j * ligne) + (k + 1) + ((i + 2) * 2)];
+				ret[currentpos + 8] = indices[i][(j * ligne) + (k + 2) + ((i + 2) * 2)];
 				currentpos += 9;
 			}
 		}
@@ -324,8 +322,23 @@ int		*split_faces(int **indices, t_obj *obj)
 	obj->nb_vs_size[2] = 0;
 	obj->nb_vs_size[1] = currentpos / 9;
 	obj->nb_vs_size[0] = 0;
+	printf("==>%d\n", obj->nb_vs_size[1]);
 	obj->max_vs = 2;
 	return (ret);
+}
+
+void	print_index_nb(char *str, int *index, int nb, int ln)
+{
+	printf("\n%s", str);
+	for (int i = 0; i < nb; i++)
+	{
+		if (!(i%ln))
+			printf("\n");
+		if (!(i%ln) && !(i%(ln * 2)))
+			printf("\n");
+		printf("%d\t",index[i]);
+	}
+	printf("\n");
 }
 
 int		main(int argc, char **argv)
@@ -337,6 +350,7 @@ int		main(int argc, char **argv)
 
 	int 		**indices;
 	t_index		ret;
+	t_index		index_split;
 
 
 	if (argc == 1)
@@ -350,30 +364,13 @@ int		main(int argc, char **argv)
 	init_glew();
 
 	indices = faces_toa(obj);
-	printf("coucou\n");
 	points = vect_toa(obj);
-	printf("Split Face\n");
-	print_indices(indices,obj);
 
-	t_index index_split;
 	index_split.index = split_faces(indices, &obj);
-	indices = NULL;
-	for (int i = 0; i < obj.nb_vs_size[1] * 9; i++)
-	{
-		if (!(i%9))
-			printf("\n");
-		printf("%d\t",index_split.index[i]);
-	}
-	printf("Done\n");
+	print_index_nb("splited",index_split.index, obj.nb_vs_size[1] * 9, 9);
 	printf("~~~~~~~~~~~~Verts~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 	ret = create_vert(obj, index_split.index, points);
-	printf("Vert\n");
-	for (int i = 0; i < ret.size * 13; i++)
-	{
-		if (!(i%9))
-			printf("\n");
-		printf("%f\t",ret.verts[i]);
-	}
+	print_index_nb("Vertex",index_split.index, obj.nb_vs_size[1] * 9, 9);
 	if (!ret.index || !ret.verts)
 	{
 		printf("Index ou Verts non malloc\n (FAUT TOUT FREE SA MERE)\n");
@@ -401,7 +398,6 @@ int		main(int argc, char **argv)
 	}
 	printf("~~~~~~~~~~~~~~~~SHADER~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 	glstruct.shader_program = create_program();
-
 	printf("~~~~~~~~~~~~~~~~LOOP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 	while (!glfwWindowShouldClose(glstruct.window))
 	{
