@@ -22,6 +22,11 @@ t_vec3	init_v3(double x, double y, double z)
 	return ((t_vec3){x, y, z});
 }
 
+t_vec4	init_v4(double x, double y, double z, double w)
+{
+	return ((t_vec4){x, y, z, w});
+}
+
 t_vec	init_v(int size)
 {
 	t_vec vec;
@@ -31,22 +36,4 @@ t_vec	init_v(int size)
 		return ((t_vec){-1, NULL});
 	vec.size = size;
 	return (vec);
-}
-
-t_mat	init_mat(int w, int h)
-{
-	t_mat	mat;
-	int		i;
-
-	if (w <= 0 || h <= 0)
-		return ((t_mat){-1, -1, NULL});
-	if (!(mat.mat = ft_memalloc(w * sizeof(double*))))
-		return ((t_mat){-1, -1, NULL});
-	i = -1;
-	while (++i < w)
-		if (!(mat.mat[i] = ft_memalloc(h * sizeof(double))))
-			return (free_mat_err(&mat, i));
-	mat.w = w;
-	mat.h = h;
-	return (mat);
 }
