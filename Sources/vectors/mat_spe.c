@@ -48,17 +48,12 @@ t_mat	rot_mat(t_vec3 v, double theta)
 	rot.mat[0][0] = c + v.x * v.x * mc;
 	rot.mat[1][1] = c + v.y * v.y * mc;
 	rot.mat[2][2] = c + v.z * v.z * mc;
-
 	rot.mat[0][1] = v.x * v.y * mc - v.z * s;
 	rot.mat[1][0] = v.x * v.y * mc + v.z * s;
-	
 	rot.mat[2][0] = v.x * v.z * mc - v.y * s;
 	rot.mat[0][2] = v.x * v.z * mc + v.y * s;
-	
-	
 	rot.mat[1][2] = v.z * v.y * mc - v.x * s;
 	rot.mat[2][1] = v.z * v.y * mc + v.x * s;
-	
 	return (rot);
 }
 
@@ -67,7 +62,7 @@ t_mat3	rot_mat3(t_vec3 v, double theta)
 	t_mat rot;
 	double c;
 	double mc;
-	double sin;
+	double s;
 
 	c = cos(theta);
 	mc = 1 - c;
@@ -89,7 +84,7 @@ t_mat4	rot_mat4(t_vec3 v, double theta)
 	t_mat rot;
 	double c;
 	double mc;
-	double sin;
+	double s;
 
 	rot = init_mat4();
 	c = cos(theta);
