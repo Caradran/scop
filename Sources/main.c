@@ -185,21 +185,21 @@ int				find_point(float *point, float tmp[13],int max)
 	return (0);
 }
 
-void			fill_tmp(float (*tmp)[13], int **indices, float *points, int i)
+void			fill_tmp(float (*tmp)[13], int *indices, float *points, int i)
 {
 	int	index;
 	int save;
 
 	index = -1;
 	while (++index < 4)
-		(*tmp)[index] = points[(indices[1][i] * 13) + index];
-	save = (indices[1][i] * 13);
+		(*tmp)[index] = points[(indices[i] * 13) + index];
+	save = (indices[i] * 13);
 	index = -1;
 	while (++index < 3)
-		(*tmp)[index + 4] = points[(indices[1][i + 3] * 13) + index + 4];
+		(*tmp)[index + 4] = points[(indices[i + 3] * 13) + index + 4];
 	index = -1;
 	while (++index < 3)
-		(*tmp)[index + 7] = points[(indices[1][i + 6] * 13) + index + 10];
+		(*tmp)[index + 7] = points[(indices[i + 6] * 13) + index + 10];
 	index = -1;
 	while (++index < 3)
 		(*tmp)[index + 10] = 0;
@@ -209,7 +209,7 @@ void			fill_tmp(float (*tmp)[13], int **indices, float *points, int i)
 			(*tmp)[index] = points[save + ((index - 4) % 3)];
 }
 
-t_index			create_vert(t_obj obj, int **indices, float *points)
+t_index			create_vert(t_obj obj, int *index, float *points)
 {
 	t_index		ret;
 	float		tmp[13];
@@ -225,7 +225,7 @@ t_index			create_vert(t_obj obj, int **indices, float *points)
 	size = 0;
 	while (++i < obj.nb_vs_size[1] * 3)
 	{
-		fill_tmp(&tmp, indices, points, (i % 3) + ((i / 3) * 9));
+		fill_tmp(&tmp, index, points, (i % 3) + ((i / 3) * 9));
 		if (!(find = find_point(ret.verts, tmp, size)))
 		{
 			ft_memcpy(&(ret.verts[size * 13]), tmp, 13 * 4);
@@ -281,44 +281,50 @@ int		*split_faces(int **indices, t_obj *obj)
 		size_malloc += obj->nb_vs_size[i] * 3 * i;
 		i++;
 	}
-	if (!(ret = ft_memalloc(size_malloc * sizeof(int))))
+	if (!(ret = ft_memalloc(size_malloc * sizeof(int) * 3)))
 		return (NULL);
+	ft_memset(ret, 32, size_malloc * 4 * 9);
 	/* Save the old face */
-	ft_memcpy(ret, indices[1], obj->nb_vs_size[1] * 3);
+	if (obj->nb_vs_size[1])
+		ft_memcpy(ret, indices[1], obj->nb_vs_size[1] * 9 * 4);
 	/* Split */
 	int currentpos;
 	int save[3];
 	int old;
+	int k;
+	int ligne;
 	currentpos = obj->nb_vs_size[1] * 3;
 	printf("Current Before : %d\n", currentpos / 3);
 	i = 0;
 	while (++i < obj->max_vs)
 	{
+		ligne = (i + 2) * 3;
 		j = -1;
-		save[0] = indices[i][0];
-		save[1] = indices[i][1 * (i + 2)];
-		save[2] = indices[i][2 * (i + 2)];
 		while (++j < obj->nb_vs_size[i])
 		{
-			ret[currentpos] = save[0];
-			ret[currentpos + 1] = indices[i][j + 1];
-			ret[currentpos + 1] = indices[i][j + 2];
-			ret[currentpos + 3] = save[1];
-			ret[currentpos + 4] = indices[i][j + 1 + (j * 4)];
-			ret[currentpos + 5] = indices[i][j + 2 + (j * 4)];
-			ret[currentpos + 6] = save[2];
-			ret[currentpos + 7] = indices[i][j + 1 + ((j + 1) * 4)];
-			ret[currentpos + 8] = indices[i][j + 2 + ((j + 1) * 4)];
-			currentpos += 9;
+			save[0] = indices[i][0 + (j * ligne)];
+			save[1] = indices[i][(1 * (i + 2)) + (j * ligne)];
+			save[2] = indices[i][(2 * (i + 2)) + (j * ligne)];
+			k = -1;
+			while (++k < i)
+			{
+				ret[currentpos] = save[0];
+				ret[currentpos + 1] = indices[i][(j * ligne) + (k + 1)];
+				ret[currentpos + 2] = indices[i][(j * ligne) + (k + 2)];
+				ret[currentpos + 3] = save[1];
+				ret[currentpos + 4] = indices[i][(j * ligne) + (k + 1)];
+				ret[currentpos + 5] = indices[i][(j * ligne) + (k + 2)];
+				ret[currentpos + 6] = save[2];
+				ret[currentpos + 7] = indices[i][(j * ligne) + (k + 1)];
+				ret[currentpos + 8] = indices[i][(j * ligne) + (k + 2)];
+				currentpos += 9;
+			}
 		}
-		printf("Current Before [%d] : %d\n", i, currentpos / 3);
 	}
-	printf("Current : %d\n", currentpos / 3);
-	obj->nb_vs_size[1] = currentpos / 3;
+	obj->nb_vs_size[2] = 0;
+	obj->nb_vs_size[1] = currentpos / 9;
 	obj->nb_vs_size[0] = 0;
-	i = 1;
-	while (++i < obj->max_vs)
-		obj->nb_vs_size[i] = 0;
+	obj->max_vs = 2;
 	return (ret);
 }
 
@@ -347,37 +353,56 @@ int		main(int argc, char **argv)
 	printf("coucou\n");
 	points = vect_toa(obj);
 	printf("Split Face\n");
-	indices[1] = split_faces(indices, &obj);
-	//free(indices[1]);
-	//indices[1] = tmp;
+	print_indices(indices,obj);
+
+	t_index index_split;
+	index_split.index = split_faces(indices, &obj);
+	indices = NULL;
+	for (int i = 0; i < obj.nb_vs_size[1] * 9; i++)
+	{
+		if (!(i%9))
+			printf("\n");
+		printf("%d\t",index_split.index[i]);
+	}
 	printf("Done\n");
-	ret = create_vert(obj, indices, points);
+	printf("~~~~~~~~~~~~Verts~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+	ret = create_vert(obj, index_split.index, points);
 	printf("Vert\n");
+	for (int i = 0; i < ret.size * 13; i++)
+	{
+		if (!(i%9))
+			printf("\n");
+		printf("%f\t",ret.verts[i]);
+	}
 	if (!ret.index || !ret.verts)
 	{
 		printf("Index ou Verts non malloc\n (FAUT TOUT FREE SA MERE)\n");
 		return (-1);
 	}
+	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 	if (DEBUG)
 	{
-		print_indices(indices, obj);
 		const GLubyte* renderer = glGetString(GL_RENDERER); // get renderer string
 		const GLubyte* version = glGetString(GL_VERSION); // version as a string
 		printf("Renderer: %s\n", renderer);
 		printf("OpenGL version supported %s\n", version);
 	}
 
+	printf("~~~~~~~~~~~~~~~~GENERATE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 	generate_vbo(&glstruct.vbo, ret.verts, sizeof(float) * ret.size * 13);
 	generate_vao(&glstruct.vao, glstruct.vbo);
 	generate_ebo(&glstruct.ebo, (float*)ret.index, (ret.index_size) * sizeof(int));
 
+	printf("~~~~~~~~~~~~~~~~TEXTURE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 	if (!setup_texture())
 	{
 		ft_putendl("Error Mallocated TGA file\n");
 		return (-1);
 	}
+	printf("~~~~~~~~~~~~~~~~SHADER~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 	glstruct.shader_program = create_program();
 
+	printf("~~~~~~~~~~~~~~~~LOOP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 	while (!glfwWindowShouldClose(glstruct.window))
 	{
 		// wipe the drawing surface clear
