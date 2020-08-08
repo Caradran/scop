@@ -6,11 +6,11 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/26 14:51:36 by esuits            #+#    #+#             */
-/*   Updated: 2020/08/06 13:55:48 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/08 18:20:37 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../Include/get_next_line.h"
+#include "../../Include/get_next_line.h"
 
 static int	ft_ralloc(char **str)
 {

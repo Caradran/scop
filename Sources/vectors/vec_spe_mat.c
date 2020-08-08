@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   spe_mat.c                                          :+:      :+:    :+:   */
+/*   vec_spe_mat.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: esuits <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/24 17:56:38 by esuits            #+#    #+#             */
-/*   Updated: 2019/04/24 17:56:39 by esuits           ###   ########.fr       */
+/*   Updated: 2020/08/08 18:20:32 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "vectors.h"
+#include "../../Include/vectors.h"
 
 t_mat	init_id_mat(int w)
 {
@@ -38,7 +38,7 @@ t_mat	rot_mat(t_vec3 v, double theta)
 	t_mat rot;
 	double c;
 	double mc;
-	double sin;
+	double s;
 
 	if ((rot = init_mat(3, 3)).w == -1)
 		return (rot);

@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   vec_init.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerandy <alerandy@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/24 17:56:14 by esuits            #+#    #+#             */
-/*   Updated: 2019/04/24 18:31:31 by alerandy         ###   ########.fr       */
+/*   Updated: 2020/08/08 18:19:04 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "vectors.h"
+#include "../../Include/vectors.h"
 
 t_vec2	init_v2(double x, double y)
 {

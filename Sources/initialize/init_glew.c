@@ -1,39 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   vec_free.c                                         :+:      :+:    :+:   */
+/*   init_flew.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/04/24 17:55:29 by esuits            #+#    #+#             */
-/*   Updated: 2020/08/08 18:19:04 by lomasse          ###   ########.fr       */
+/*   Created: 2020/08/08 17:49:44 by lomasse           #+#    #+#             */
+/*   Updated: 2020/08/08 17:50:04 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../Include/vectors.h"
+#include "../../Include/scop.h"
 
-void	free_v(t_vec *a)
+void	init_glew(void)
 {
-	ft_memdel((void **)a->vec);
-}
+	GLenum err;
 
-void	free_mat(t_mat *a)
-{
-	int j;
-
-	j = -1;
-	while (++j < a->w)
-		ft_memdel((void**)a->mat[j]);
-	ft_memdel((void**)a->mat);
-}
-
-t_mat	free_mat_err(t_mat *mat, int i)
-{
-	int j;
-
-	j = -1;
-	while (++j < i)
-		ft_memdel((void**)mat->mat[j]);
-	ft_memdel((void**)mat->mat);
-	return ((t_mat){-1, -1, NULL});
+	glewExperimental = GL_TRUE;
+	if ((err = glewInit()) != GLEW_OK)
+	{
+		printf("%s\n", glewGetErrorString(err));
+		glfwTerminate();
+		exit(1);
+	}
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
 }

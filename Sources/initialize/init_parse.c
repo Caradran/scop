@@ -1,4 +1,4 @@
-#include "../Include/scop.h"
+#include "../../Include/scop.h"
 
 t_vert	init_vert(void)
 {
@@ -36,14 +36,14 @@ t_f		init_f(void)
 {
 	int *verts;
 	int *vt;
-	int *vp;
+	int *vn;
 
 	if (!(verts = ft_memalloc(1024 * sizeof(float)))
 		|| !(vt = ft_memalloc(1024 * sizeof(float)))
-		|| !(vp = ft_memalloc(1024 * sizeof(float))))
+		|| !(vn = ft_memalloc(1024 * sizeof(float))))
 		return ((t_f){-1, -1, NULL, NULL, NULL});
 	else
-		return ((t_f){0, -1, verts, vt, vp});
+		return ((t_f){0, -1, verts, vt, vn});
 }
 
 t_obj	init_obj(void)

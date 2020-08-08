@@ -1,4 +1,4 @@
-#include "../Include/scop.h"
+#include "../../Include/scop.h"
 
 static int size_num(char *str)
 {
@@ -55,7 +55,7 @@ static void         parse_vert(char *buffer, t_vert *vert, int type)
 	else if (buffer[i] != '#')
 		vert->size = -2;
 	vert->size++;
-	if (!((vert->size) % (type * 1024)))
+	if (!((vert->size - 1) % (type * 1024)))
 		ft_ralloc((char**)vert->v, (type * 1024) * sizeof(float));
 }
 
@@ -82,7 +82,7 @@ static void        parse_vn(char *buffer, t_vert *vert)
 		i += size_num(&(buffer[i]));
 		vert->size++;
 	}
-	if (!((vert->size) % (3 * 1024)))
+	if (!((vert->size - 1) % (3 * 1024)))
 		ft_ralloc((char**)vert->v, 3 * 1024 * sizeof(float));
 }
 
@@ -238,6 +238,12 @@ void parse_all_vert(char *buffer, t_obj *obj, int *j)
 	{
 		parse_faces(&(buffer[i + 1]), &(obj->f[*j]), obj);
 		(*j)++;
+
+		printf("======> %d\n", *j);
+		if (!((*j) % (1023)))
+		{
+			ft_ralloc((char**)obj->f, (1024 * 2) * sizeof(t_f));
+		}
 	}
 	else if (!(buffer[i] == '#'|| !buffer[i]))
 		obj->vt.size = -1;

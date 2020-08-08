@@ -1,4 +1,4 @@
-#include "../Include/scop.h"
+#include "../../Include/scop.h"
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -33,6 +33,7 @@ t_obj parse(char *filename)
 		if (check_error_obj(&obj))
 		{
 			printf("###### parse error line : %d ######\n", j);
+			exit(1);
 			return (obj);
 		}
 		ft_memdel((void**)&buffer);

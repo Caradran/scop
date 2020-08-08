@@ -3,21 +3,40 @@ NAME			= scop
 
 HEADER 			= $(shell find Include -type f)
 
-SRC_PATH		= $(shell find Sources -type d)
+SRC_PATH		= $(addprefix Sources/, $(SRC))
 
 INC_PATH 		= $(shell find Include -type d) $(shell find libft -type d)
 
-SRC_PATH		= $(addprefix Sources/, $(SRC))
-
-SRC				=	main.c				\
-					to_array.c			\
-					utils.c				\
-					get_next_line.c		\
-					init_parse.c		\
-					parse_vect.c		\
-					print_struct.c		\
-					readshader.c		\
-					parse.c				\
+SRC				=	main.c							\
+					initialize/init_glew.c			\
+					initialize/init_glfw.c			\
+					initialize/init_parse.c			\
+					opengl/generate.c				\
+					opengl/shader.c					\
+					opengl/texture.c				\
+					other/error.c					\
+					other/print_debug.c				\
+					other/print_struct.c			\
+					other/utils.c					\
+					parsing/get_next_line.c			\
+					parsing/parse.c					\
+					parsing/parse_vect.c			\
+					parsing/readshader.c			\
+					parsing/to_array.c				\
+					vectors/vec_add.c				\
+					vectors/vec_free.c				\
+					vectors/vec_init.c				\
+					vectors/vec_mult.c				\
+					vectors/vec_mult_mat.c			\
+					vectors/vec_norm.c				\
+					vectors/vec_print.c				\
+					vectors/vec_rot.c				\
+					vectors/vec_scale.c				\
+					vectors/vec_spe_mat.c			\
+					vectors/vec_sub.c				\
+					vertex/opti_vertex.c			\
+					vertex/setup_vs_max.c			\
+					vertex/split_faces.c			\
 
 FRAMEWORK		=	Cocoa OpenGL
 

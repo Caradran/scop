@@ -1,4 +1,4 @@
-#include "../Include/scop.h"
+#include "../../Include/scop.h"
 
 double			ft_atof(const char *str)
 {

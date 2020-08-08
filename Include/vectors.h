@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   vectors.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: esuits <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/24 17:56:46 by esuits            #+#    #+#             */
-/*   Updated: 2019/04/24 17:56:48 by esuits           ###   ########.fr       */
+/*   Updated: 2020/08/08 18:16:43 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef VECTORS_H
 # define VECTORS_H
 
-# include "libft.h"
+# include "../libft/include/libft.h"
 # include <math.h>
 # include <stdio.h>
 

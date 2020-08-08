@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 #include "../libft/include/libft.h"
 # include "get_next_line.h"
+# include "vectors.h"
 # include "../Tga_Reader/includes/tga_reader.h"
 # include <stdio.h>
 # define DEBUG 1
@@ -88,21 +89,48 @@ t_l			init_l(void);
 t_f			init_f(void);
 t_index		init_index(void);
 
+/*
+*	Init OpenGL
+*/
+
+void		init_glew(void);
+void		init_glfw(void);
 /* ------------------- */
 
 /* 
 *	core parsing functions.
 */
 
-t_obj	parse(char *filename);
-void	parse_all_vert(char *buffer, t_obj *obj, int *j);
+char		*readshad(char *source, int *i);
+t_obj		parse(char *filename);
+void		parse_all_vert(char *buffer, t_obj *obj, int *j);
 
-float	*vect_toa(t_obj obj);
-int 	**faces_toa(t_obj obj);
+float		*vect_toa(t_obj obj);
+int 		**faces_toa(t_obj obj);
 
-int		check_error_obj(t_obj *obj);
+int			check_error_obj(t_obj *obj);
 
 /* ------------------- */
+
+/*
+*	OpenGL Function
+*/
+
+
+int			setup_texture(void);
+GLuint		ft_shader(char *name, GLenum shader_type);
+GLuint		create_program(void);
+void		generate_vbo(GLuint *vbo, float points[], int len);
+void		generate_ebo(GLuint *ebo, float points[], int len);
+void		generate_vao(GLuint *vao, GLuint vbo);
+
+/*
+*	Vertex
+*/
+
+t_index		create_vert(t_obj obj, int *index, float *points);
+void		set_max_vs(t_obj	*obj);
+int			*split_faces(int **indices, t_obj *obj);
 
 /*
 *	Verbose debuging functions.
@@ -111,6 +139,9 @@ int		check_error_obj(t_obj *obj);
 void	print_obj(t_obj obj);
 void	print_vert(t_vert vert, int type);
 void	print_array(float *array, t_obj obj);
+void	print_error(int i);
+void	print_index_nb(char *str, int *index, int nb, int ln);
+void	print_indices(int **indices, t_obj obj);
 
 /* ------------------- */
 
