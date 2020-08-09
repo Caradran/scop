@@ -27,6 +27,8 @@ typedef struct  s_camera
 	t_vec3 front;
 	t_vec3 up;
 	t_vec3 right;
+	float yaw;
+	float pitch;
 	float speed;
 }				t_camera;
 
