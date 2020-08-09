@@ -32,6 +32,7 @@ SRC				=	main.c							\
 					vectors/mat_sub.c				\
 					vectors/mat_to_a.c				\
 					vectors/vec_add.c				\
+					vectors/vec_dot.c				\
 					vectors/vec_free.c				\
 					vectors/vec_get_value.c			\
 					vectors/vec_init.c				\

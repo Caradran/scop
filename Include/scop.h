@@ -21,6 +21,15 @@ typedef struct	s_glstruct
 	GLuint		shader_program;
 }				t_glstruct;
 
+typedef struct  s_camera
+{
+	t_vec3 pos;
+	t_vec3 front;
+	t_vec3 up;
+	t_vec3 right;
+	float speed;
+}				t_camera;
+
 typedef struct	s_vert
 {
 	int			size;

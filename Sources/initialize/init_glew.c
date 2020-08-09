@@ -24,5 +24,5 @@ void	init_glew(void)
 		exit(1);
 	}
 	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LESS);
+	// glDepthFunc(GL_MORE);
 }

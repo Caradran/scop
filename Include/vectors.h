@@ -158,6 +158,14 @@ double			norme_v2(t_vec2 a);
 double			norme_v3(t_vec3 a);
 double			norme_v4(t_vec4 a);
 
+// vec_dot.c
+double	dot_vec2(t_vec2 a, t_vec2 b);
+double	dot_vec3(t_vec3 a, t_vec3 b);
+double	dot_vec4(t_vec4 a, t_vec4 b);
+double	vec_dot(t_vec a, t_vec b);
+t_vec3	cross_vec3(t_vec3 a, t_vec3 b);
+
+
 // vec_print.c
 void			print_v2(t_vec2 a);
 void			print_v3(t_vec3 a);
