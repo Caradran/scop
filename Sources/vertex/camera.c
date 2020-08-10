@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/09 20:21:07 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/10 16:26:01 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/10 16:40:44 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "../../Include/scop.h"
 
 
-t_mat4 creat_mat_camera(t_camera *camera)
+static t_mat4 creat_mat_camera(t_camera *camera)
 {
 	t_mat4 ret;
 	t_mat4 P;
@@ -38,11 +38,14 @@ t_mat4 creat_mat_camera(t_camera *camera)
 	return (mult_mat4(ret, P));
 }
 
-void	creat_camera(t_vec3 pos, t_vec3 target, t_camera *camera)
+void	creat_camera(t_vec3 pos,  t_camera *camera)
 {
 
 	camera->pos = pos;
-	camera->front = normalize_v3(sub_v3(target, camera->pos));
+	camera->front.x = cos(M_PI * camera->yaw / 180.0) * cos(M_PI * camera->pitch / 180.0);
+	camera->front.y = sin(M_PI * camera->pitch / 180.0);
+	camera->front.z = sin(M_PI * camera->yaw / 180.0) * cos(M_PI * camera->pitch / 180.0);
+	camera->front = normalize_v3(camera->front);
 	camera->up = init_v3(0, 1, 0);
 	if (!norme_v3(sub_v3(camera->up, camera->front)))
 		camera->up = init_v3(0, 0, 1);
@@ -50,7 +53,7 @@ void	creat_camera(t_vec3 pos, t_vec3 target, t_camera *camera)
 	camera->up = cross_vec3(camera->front, camera->right);
 }
 
-t_mat4	model_mat(t_vec3 scale_vec, t_vec3 trans_vec, t_vec3 rot_vec, float theta)
+static t_mat4	model_mat(t_vec3 scale_vec, t_vec3 trans_vec, t_vec3 rot_vec, float theta)
 {
 	t_mat4 ret;
 
@@ -62,7 +65,7 @@ t_mat4	model_mat(t_vec3 scale_vec, t_vec3 trans_vec, t_vec3 rot_vec, float theta
 	return (ret);
 }
 
-t_mat4 view_mat(t_vec3 scale_vec, t_vec3 trans_vec, t_vec3 rot_vec, float theta)
+static t_mat4 view_mat(t_vec3 scale_vec, t_vec3 trans_vec, t_vec3 rot_vec, float theta)
 {
 	t_mat4 ret;
 
@@ -73,7 +76,7 @@ t_mat4 view_mat(t_vec3 scale_vec, t_vec3 trans_vec, t_vec3 rot_vec, float theta)
 	return (ret);
 }
 
-t_mat4 proj_mat(float fov, float far, float near)
+static t_mat4 proj_mat(float fov, float far, float near)
 {
 	t_mat4 ret;
 
@@ -99,11 +102,39 @@ void	transformations(t_glstruct glstruct, t_camera *camera)
 	// print_mat4(ret);
 	int i = -1;
 	while (++i < 16)
-		test[i] = (float)(mat4_to_a(ret))[i];
+		test[i] = (float)(mat4_to_a(ret))[i]; // Leaks
 
 	glUseProgram(glstruct.shader_program);
 	unsigned int transformLoc = glGetUniformLocation(glstruct.shader_program, "transform");
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, (GLfloat*)test);
+}
+
+void mouse_callback(double xpos, double ypos, t_camera *camera)
+{
+	static double lastX = 400;
+	static double lastY = 300;
+	double xoffset;
+	double yoffset;
+
+	xoffset = xpos - lastX;
+	yoffset = lastY - ypos;
+	lastX = xpos;
+	lastY = ypos;
+
+	xoffset *= 0.1;
+	yoffset *= 0.1;
+
+	camera->pitch += yoffset;
+	camera->yaw += xoffset;
+	camera->yaw = fmod(camera->yaw, 360);
+
+	if(camera->pitch > 89.0f)
+		camera->pitch =  89.0f;
+	if(camera->pitch < -89.0f)
+		camera->pitch = -89.0f;
+
+
+	creat_camera(camera->pos, camera);
 }
 
 void	update_camera(t_glstruct *glstruct, t_camera *camera)
@@ -111,14 +142,17 @@ void	update_camera(t_glstruct *glstruct, t_camera *camera)
 	static float deltaTime = 0;
 	static float lastFrame = 0;
 	float currentFrame;
+	double xpos;
+	double ypos;
 
 	currentFrame = glfwGetTime();
 	deltaTime = currentFrame - lastFrame;
 	lastFrame = currentFrame;  
-
+	glfwGetCursorPos(glstruct->window, &xpos, &ypos);
+	mouse_callback(xpos, ypos, camera);
     camera->speed = 2.50f * deltaTime;
     if (glfwGetKey(glstruct->window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-       exit (0);
+		exit (0);
     if (glfwGetKey(glstruct->window, GLFW_KEY_W) == GLFW_PRESS)
        camera->pos = add_v3(camera->pos, scale_v3(camera->speed, camera->front));
     if (glfwGetKey(glstruct->window, GLFW_KEY_S) == GLFW_PRESS)
@@ -128,7 +162,7 @@ void	update_camera(t_glstruct *glstruct, t_camera *camera)
     if (glfwGetKey(glstruct->window, GLFW_KEY_D) == GLFW_PRESS)
         camera->pos = sub_v3(camera->pos, scale_v3(camera->speed, camera->right));
     if (glfwGetKey(glstruct->window, GLFW_KEY_Q) == GLFW_PRESS)
-        camera->pos = sub_v3(camera->pos, scale_v3(camera->speed, camera->up));
-    if (glfwGetKey(glstruct->window, GLFW_KEY_E) == GLFW_PRESS)
         camera->pos = add_v3(camera->pos, scale_v3(camera->speed, camera->up));
+    if (glfwGetKey(glstruct->window, GLFW_KEY_E) == GLFW_PRESS)
+        camera->pos = sub_v3(camera->pos, scale_v3(camera->speed, camera->up));
 }

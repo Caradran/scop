@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/08 17:54:11 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/10 15:58:18 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/10 16:30:53 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int		*split_faces(t_obj *obj, int *size)
 	size_malloc = 0;
 	while (++i < obj->size_face[0])
 		size_malloc += obj->face[i].size - 2;
-	if (!(ret = ft_memalloc(size_malloc * 9 * sizeof(int)))) // VP not include
+	if (!(ret = ft_memalloc(size_malloc * 9 * sizeof(int))))
 		return (NULL);
 	*size = size_malloc;
 	ret = fill_ret(ret, obj);
