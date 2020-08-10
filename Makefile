@@ -5,7 +5,7 @@ HEADER 			= $(shell find Include -type f)
 
 SRC_PATH		= $(addprefix Sources/, $(SRC))
 
-INC_PATH 		= $(shell find Include -type d) $(shell find libft -type d)
+INC_PATH 		= $(shell find Include -type d) $(shell find libft -type d) $(shell find ObjReader -type d)
 
 SRC				=	main.c							\
 					initialize/init_glew.c			\
@@ -18,11 +18,7 @@ SRC				=	main.c							\
 					other/print_debug.c				\
 					other/print_struct.c			\
 					other/utils.c					\
-					parsing/get_next_line.c			\
-					parsing/parse.c					\
-					parsing/parse_vect.c			\
 					parsing/readshader.c			\
-					parsing/to_array.c				\
 					vectors/mat_add.c				\
 					vectors/mat_init.c				\
 					vectors/mat_mult.c				\
@@ -47,6 +43,7 @@ SRC				=	main.c							\
 					vertex/opti_vertex.c			\
 					vertex/setup_vs_max.c			\
 					vertex/split_faces.c			\
+					vertex/camera.c					\
 
 FRAMEWORK		=	Cocoa OpenGL
 
@@ -59,5 +56,5 @@ CFLAG			=
 
 all: 
 	@echo "relink !"
-	@$(CC) $(CFLAG) `pkg-config --cflags $(PKG)` $(SRC_PATH) libft/libft.a libft/include/libft.h Include/scop.h Include/scop.h Include/get_next_line.h `pkg-config --static --libs $(PKG)` $(foreach fmw, $(FRAMEWORK), -framework $(fmw)) -L ./Tga_Reader -l Tga -I Tga_Reader/includes/tga_reader.h
+	@$(CC) $(CFLAG) `pkg-config --cflags $(PKG)` $(SRC_PATH) libft/libft.a libft/include/libft.h Include/scop.h Include/get_next_line.h `pkg-config --static --libs $(PKG)` $(foreach fmw, $(FRAMEWORK), -framework $(fmw)) -L ./Tga_Reader -l Tga -I Tga_Reader/includes/tga_reader.h -L ./ObjReader -l objreader -I ObjReader/Includes/ObjReader.h -I ObjReader/Includes/ObjError.h ObjReader/libft/libft.a ObjReader/libft/libft.h
 	@mv a.out scop

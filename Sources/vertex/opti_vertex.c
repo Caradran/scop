@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/08 17:54:46 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/08 18:13:11 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/10 16:04:00 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,56 +23,77 @@ static int		find_point(float *point, float tmp[13],int max)
 	return (-1);
 }
 
-static void		fill_tmp(float (*tmp)[13], int *indices, float *points, int i)
+static void		fill_tmp(float (*tmp)[13], int *indices, t_obj *obj, int i)
 {
 	int	index;
-	int save;
 
-	index = -1;
-	while (++index < 4)
-		(*tmp)[index] = points[(indices[i] * 13) + index];
-	save = (indices[i] * 13);
-	index = -1;
-	while (++index < 3)
-		(*tmp)[index + 4] = points[(indices[i + 3] * 13) + index + 4];
-	index = -1;
-	while (++index < 3)
-		(*tmp)[index + 7] = points[(indices[i + 6] * 13) + index + 10];
-	index = -1;
-	while (++index < 3)
-		(*tmp)[index + 10] = 0;
-	index = 4;
-	while (++index < 13)
-		if ((*tmp)[index] == -1)
-			(*tmp)[index] = points[save + ((index - 4) % 3)];
+	if (indices[i] >= obj->size_v[0] || indices[i] < 0)
+		printf("Error size_v\n");
+	if (indices[i + 1] >= obj->size_vt[0] || indices[i + 1] < 0)
+		printf("Error size_vt\n");
+	if (indices[i + 2] >= obj->size_vn[0] || indices[i + 2] < 0)
+		printf("Error size_vn\n");
+	(*tmp)[0] = obj->v[indices[i]].x;
+	(*tmp)[1] = obj->v[indices[i]].y;
+	(*tmp)[2] = obj->v[indices[i]].z;
+	(*tmp)[3] = obj->v[indices[i]].w;
+	(*tmp)[4] = obj->vt[indices[i + 1]].x;
+	(*tmp)[5] = obj->vt[indices[i + 1]].y;
+	(*tmp)[6] = obj->vt[indices[i + 1]].z;
+	(*tmp)[7] = obj->vn[indices[i + 2]].x;
+	(*tmp)[8] = obj->vn[indices[i + 2]].y;
+	(*tmp)[9] = obj->vn[indices[i + 2]].z;
+	(*tmp)[10] = 0;
+	(*tmp)[11] = 0;
+	(*tmp)[12] = 0;
 }
 
-t_index			create_vert(t_obj obj, int *index, float *points)
+t_index			create_vert(t_obj obj, int *index, int size)
 {
+	t_index		tmpi;
 	t_index		ret;
 	float		tmp[13];
-	int			size;
+	int			max;
 	int			i;
+    int	 		j;
 	int			find;
 
-	if (!(ret.verts = malloc(sizeof(t_index) * obj.nb_vs_size[1] * 3 * 13)))
+	if (!(tmpi.verts = ft_memalloc(sizeof(float) * size * 9 * 13)))
 		return ((t_index){NULL, NULL});
-	if (!(ret.index = malloc(sizeof(t_index) * obj.nb_vs_size[1] * 3)))
+	if (!(tmpi.index = ft_memalloc(sizeof(int) * size * 9)))
 		return ((t_index){NULL, NULL});
-	i = -1;
-	size = 0;
-	while (++i < obj.nb_vs_size[1] * 3)
-	{
-		fill_tmp(&tmp, index, points, (i % 3) + ((i / 3) * 9));
-		if ((find = find_point(ret.verts, tmp, size)) == -1)
-		{
-			ft_memcpy(&(ret.verts[size * 13]), tmp, 13 * 4);
-			find = size;
-			size += 1;
-		}
-		ret.index[i] = find;
+    i = -1;
+    max = 0;
+    find = 0;
+    while (++i < size * 3)
+    {
+        fill_tmp(&tmp, index, &obj, i * 3);
+        if ((find = find_point(tmpi.verts, tmp, max)) == -1)
+        {
+            ft_memcpy(&(tmpi.verts[max * 13]), tmp, 13 * sizeof(float));
+            find = max;
+            max += 1;   
+        }
+		tmpi.index[i] = find;
+		printf("Find[%d] :\t%d\n", i, find);
 	}
-	ret.size = size;
+	printf("Done\n");
+	
+	if (!(ret.verts = malloc(sizeof(float) * max * 13)))
+		return ((t_index){NULL, NULL});
+	if (!(ret.index = malloc(sizeof(int) * i * 9)))
+		return ((t_index){NULL, NULL});
+	ret.size = max * 13;
 	ret.index_size = i;
+	i = -1;
+	while (++i < ret.index_size)
+		ret.index[i] = tmpi.index[i];
+	
+	i = -1;
+	while (++i < ret.size)
+		ret.verts[i] = tmpi.verts[i];
+
+	free(tmpi.index);
+	free(tmpi.verts);
 	return (ret);
 }

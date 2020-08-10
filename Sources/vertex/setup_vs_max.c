@@ -6,12 +6,12 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/08 17:56:03 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/08 17:56:14 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/09 19:22:07 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../Include/scop.h"
-
+/*
 void	set_max_vs(t_obj	*obj)
 {
 	int i;
@@ -39,4 +39,4 @@ void	set_max_vs(t_obj	*obj)
 
 	obj->max_vs = max_vs;
 	obj->nb_vs_size = nb_vs_size;
-}
+}*/
