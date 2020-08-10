@@ -7,6 +7,7 @@
 # include "get_next_line.h"
 # include "vectors.h"
 # include "../Tga_Reader/includes/tga_reader.h"
+# include "../ObjReader/Includes/ObjReader.h"
 # include <stdio.h>
 # define DEBUG 1
 # define IS_NUM(x) ((x >= '0' && x <= '9') || x == '-' || x == '.')
@@ -70,28 +71,11 @@ typedef struct	s_index
 	int			size;
 }				t_index;
 
-typedef struct	s_obj
-{
-	int			error;
-	int			p_size;
-	int			l_size;
-	int			f_size;
-	t_vert		v;
-	t_vp		vp;
-	t_vn		vn;
-	t_vt		vt;
-	t_p			*p;
-	t_l			*l;
-	t_f			*f;
-	int			max_vs;
-	int			*nb_vs_size;
-}				t_obj;
-
 /*
 *	Init functions for t_obj structs in it.
 */
 
-t_obj		init_obj(void);
+// t_obj		init_obj(void);
 t_vert		init_vert(void);
 t_p			init_p(void);
 t_l			init_l(void);
@@ -137,9 +121,9 @@ void		generate_vao(GLuint *vao, GLuint vbo);
 *	Vertex
 */
 
-t_index		create_vert(t_obj obj, int *index, float *points);
+t_index			create_vert(t_obj obj, int *index, int size);
 void		set_max_vs(t_obj	*obj);
-int			*split_faces(int **indices, t_obj *obj);
+int		*split_faces(t_obj *obj, int *size);
 
 /*
 *	Verbose debuging functions.
