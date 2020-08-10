@@ -119,6 +119,16 @@ void		generate_vbo(GLuint *vbo, float points[], int len);
 void		generate_ebo(GLuint *ebo, float points[], int len);
 void		generate_vao(GLuint *vao, GLuint vbo);
 
+
+/*
+*	Camera and object transformation functions
+*/
+
+void	creat_camera(t_vec3 pos,  t_camera *camera);
+void	transformations(t_glstruct glstruct, t_camera *camera);
+void	update_camera(t_glstruct *glstruct, t_camera *camera);
+
+
 /*
 *	Vertex
 */

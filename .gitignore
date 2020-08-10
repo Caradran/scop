@@ -5,3 +5,4 @@ scop
 libft/objs/*.o
 *.dSYM
 *.tmp
+.vscode

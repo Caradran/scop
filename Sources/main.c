@@ -14,10 +14,6 @@
 #include <stdlib.h>
 #include "../Include/scop.h"
 
-void	creat_camera(t_vec3 pos,  t_camera *camera);
-void	transformations(t_glstruct glstruct, t_camera *camera);
-void	update_camera(t_glstruct *glstruct, t_camera *camera);
-
 int		runobj(t_glstruct glstruct, t_index ret, t_camera camera)
 {
 	init_glfw();
