@@ -15,6 +15,5 @@ void main()
 
   gl_Position = v * transform;
   our_color = vt;
-  //our_color = vec3(transform * vec4(vt, 1.0f));
   UV = vec2(vt);
 }

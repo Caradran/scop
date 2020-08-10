@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/09 20:22:02 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/10 16:42:13 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/10 18:45:33 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,6 @@ int		main(int argc, char **argv)
 		printf("VN : %f||%f||%f\n", obj->vn[i].x, obj->vn[i].y, obj->vn[i].z);
 	/* Obj Checker */
 	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-	
 	int size;
 	size = 0;
 	index_split.index = split_faces(obj, &size);

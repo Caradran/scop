@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/09 16:00:45 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/09 19:42:58 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/10 18:45:10 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static int       allocate_index(t_obj *obj, int nb_index)
     return (0);
 }
 
-static int       get_index(char *line, int *i, int (*index)[3], int nb, t_face *f)
+static int       get_index(char *line, int *i, int (*index)[3], int nb, t_face *f, t_obj *obj)
 {
     int j;
 
@@ -64,6 +64,8 @@ static int       get_index(char *line, int *i, int (*index)[3], int nb, t_face *
     (*index)[2] = 0;
     *i = find_next(line, *i);
     (*index)[0] = ft_atoi(&(line[*i]));
+    if ((*index)[0] < 0)
+        (*index)[0] = obj->size_v[0] - (*index)[0];
     while (line[*i] && (line[*i] != '/' && !ft_isspace(line[*i])))
         (*i)++;
     if (f->flag == 0)
@@ -73,7 +75,9 @@ static int       get_index(char *line, int *i, int (*index)[3], int nb, t_face *
     else if (ft_isspace(line[*i]))
         return (4);
     (*i)++;
-    (*index)[1] = ft_atoi(&(line[*i]));
+    (*index)[1] = ft_atoi(&(line[*i - 1]));
+    if ((*index)[1] < 0)
+        (*index)[1] = obj->size_vt[0] - (*index)[1];
     while (line[*i] && (line[*i] != '/' && !ft_isspace(line[*i])))
         (*i)++;
     if (f->flag == 1)
@@ -83,7 +87,9 @@ static int       get_index(char *line, int *i, int (*index)[3], int nb, t_face *
     else if (ft_isspace(line[*i]))
         return (4);
     (*i)++;
-    (*index)[2] = ft_atoi(&(line[*i]));
+    (*index)[2] = ft_atoi(&(line[*i - 1]));
+    if ((*index)[2] < 0)
+        (*index)[2] = obj->size_vn[0] - (*index)[2];
     return (0);
 }
 
@@ -98,7 +104,7 @@ static int         fill_index_face(t_obj *obj, char *line)
     nb = 0;
     while (nb < obj->face[obj->size_face[0]].size)
     {
-        if ((error = get_index(line, &i, &(index), nb, &obj->face[obj->size_face[0]])))
+        if ((error = get_index(line, &i, &(index), nb, &obj->face[obj->size_face[0]], obj)))
             return (error);
         obj->face[obj->size_face[0]].i_v[nb] = index[0];
         obj->face[obj->size_face[0]].i_vt[nb] = index[1];
