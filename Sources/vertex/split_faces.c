@@ -6,11 +6,36 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/08 17:54:11 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/10 16:30:53 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/10 16:51:17 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../Include/scop.h"
+
+int		split_other(int **ret, t_obj *obj, int index, int *i)
+{
+	int j;
+	int	save[3];
+
+	j = -1;
+	while (++j < obj->face[index].size - 2)
+	{
+		save[0] = obj->face[index].i_v[0] - 1;
+		save[1] = obj->face[index].i_vt[0] - 1;
+		save[2] = obj->face[index].i_vn[0] - 1;
+		(*ret)[*i + 0] = save[0];
+		(*ret)[*i + 1] = save[1];
+		(*ret)[*i + 2] = save[2];
+		(*ret)[*i + 3] = obj->face[index].i_v[j + 1] - 1;
+		(*ret)[*i + 4] = obj->face[index].i_vt[j + 1] - 1;
+		(*ret)[*i + 5] = obj->face[index].i_vn[j + 1] - 1;
+		(*ret)[*i + 6] = obj->face[index].i_v[j + 2] - 1;
+		(*ret)[*i + 7] = obj->face[index].i_vt[j + 2] - 1;
+		(*ret)[*i + 8] = obj->face[index].i_vn[j + 3] - 1;
+		*i += 9;
+	}
+	return (0);
+}
 
 int		*fill_ret(int	*ret, t_obj *obj)
 {
@@ -35,7 +60,7 @@ int		*fill_ret(int	*ret, t_obj *obj)
 			i += 9;
 		}
 		else
-			printf("Invalid size face : [%d]\n", obj->face[index].size);
+			split_other(&ret, obj, index, &i);
 	}
 	return (ret);
 }
