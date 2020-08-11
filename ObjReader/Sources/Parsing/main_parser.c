@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/08 21:54:34 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/11 15:07:02 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/11 17:15:07 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,17 @@ static int            init_v_malloc(t_obj *obj)
     return (0);
 }
 
+static char     *ft_ralloc(char **str, long int newsize)
+{
+	char *res;
+
+	if (!(res = ft_strnew(newsize)))
+		return (0);
+	res = ft_memcpy(res, *str, newsize / 2);
+	ft_memdel((void **)str);
+    return (res);
+}
+
 static int             adjust_allocation(t_obj *obj)
 {
     return (0);
@@ -52,17 +63,43 @@ int             main_parser(t_obj *obj)
     char    *new;
     int     fd;
     int     error;
+    char    buffer[32000];
+    
+    char    *file;
+    long int parsed_file[2];
+    long int reader;
 
+    parsed_file[0] = 0;
+    parsed_file[1] = 32000;
     fd = open(obj->path, O_RDONLY);
     if (fd == -1)
         return (objerror(obj, 2));
     if (init_v_malloc(obj))
         return (objerror(obj, 1));
+        
     obj->line = 1;
-    while (get_next_line(fd, &line))
+    if (!(file = malloc(sizeof(parsed_file[1]))))
+        return (1);
+    printf("Hello\n");
+    while ((reader = read(fd, &(file[parsed_file[0]]), parsed_file[1])))
     {
+        printf("Hello[%ld]\n", reader);
+        if (reader == -1)
+            break ;
+        if (reader < 32000)
+            break ;
+        parsed_file[0] += reader;
+        parsed_file[1] *= 2;
+        ft_ralloc(&(file), parsed_file[1]);
+    }
+    printf("asdasd\n");
+    parsed_file[0] += reader;
+
+    while ((line = ft_strchr(file, '\n')))
+    {
+        printf("hey\n");
         new = skip_whitespace(line);
-        printf("[%ld] ==> %s\n", obj->line, new);
+        //printf("[%ld] ==> %s\n", obj->line, new);
         if (new == NULL || !new[0])
            ;
         else if (new[0] == 'v')
@@ -92,10 +129,11 @@ int             main_parser(t_obj *obj)
             printf("==> %s\n", new);
             return (objerror(obj, 4));
         }
-        line != NULL ? free(line) : 0;
+        // line != NULL ? free(line) : 0;
         obj->line++;
     }
-    line ? free(line) : 0;
+    // line ? free(line) : 0;
+    free(file);
     printf("Min : %f\t\t%f\t\t%f\n", obj->min.x, obj->min.y, obj->min.z);
     printf("Max : %f\t\t%f\t\t%f\n", obj->max.x, obj->max.y, obj->max.z);
     obj->center.x = (obj->min.x + obj->max.x / 2.0);
