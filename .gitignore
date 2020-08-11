@@ -6,3 +6,5 @@ libft/objs/*.o
 *.dSYM
 *.tmp
 .vscode
+*.a.*
+.swp
