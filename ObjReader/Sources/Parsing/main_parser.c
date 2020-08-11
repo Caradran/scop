@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/08 21:54:34 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/09 19:53:53 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/11 15:07:02 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ int             main_parser(t_obj *obj)
     while (get_next_line(fd, &line))
     {
         new = skip_whitespace(line);
+        printf("[%ld] ==> %s\n", obj->line, new);
         if (new == NULL || !new[0])
            ;
         else if (new[0] == 'v')
@@ -78,7 +79,13 @@ int             main_parser(t_obj *obj)
             ;
         else if (new[0] == 'o')
             ;
+        else if (new[0] == 'g')
+            ;
         else if (new[0] == 'm')
+            ;
+        else if (new[0] == 's')
+            ;
+        else if (new[0] == 'u')
             ;
         else
         {

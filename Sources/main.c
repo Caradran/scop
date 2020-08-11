@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/09 20:22:02 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/10 18:45:33 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/11 14:41:16 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int		runobj(t_glstruct glstruct, t_index ret, t_camera camera)
 		glBindVertexArray(glstruct.vao);
 		// draw points 0-3 from the currently bound VAO with current in-use shader
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, glstruct.ebo);
-		// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		glDrawElements(GL_TRIANGLES, ret.index_size, GL_UNSIGNED_INT, 0);
 		// glDrawArrays(GL_TRIANGLES, 1, 4);
 		// update other events like input handling

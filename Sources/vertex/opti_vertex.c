@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/08 17:54:46 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/10 18:41:44 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/11 14:39:50 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,11 @@ static void		fill_tmp(float (*tmp)[13], int *indices, t_obj *obj, int i)
 {
 	int	index;
 
-	if (indices[i] >= obj->size_v[0] || indices[i] < 0)
+	if (indices[i] > obj->size_v[0] || indices[i] < 0)
 		printf("Error size_v, %d\n", indices[i]);
-	if (indices[i + 1] >= obj->size_vt[0] || indices[i + 1] < 0)
+	if (indices[i + 1] > obj->size_vt[0] || indices[i + 1] < 0)
 		printf("Error size_vt, %d\n", indices[i + 1]);
-	if (indices[i + 2] >= obj->size_vn[0] || indices[i + 2] < 0)
+	if (indices[i + 2] > obj->size_vn[0] || indices[i + 2] < 0)
 		printf("Error size_vn, %d\n", indices[i + 2]);
 	(*tmp)[0] = obj->v[indices[i]].x;
 	(*tmp)[1] = obj->v[indices[i]].y;

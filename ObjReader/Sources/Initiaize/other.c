@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/09 20:07:31 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/09 21:05:32 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/11 15:01:25 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int         objerror(t_obj *obj, int code)
 
 	code >= ERR_MAX ? code = ERR_MAX - 1: 0;
 	code < 0 ? code = ERR_MAX - 1 : 0;
-    if (code == 4)
+    if (code == 4 || code == 1)
         printf("Error line : %ld\n", obj->line);
     printf("%s", tab[code]);
     return (code);

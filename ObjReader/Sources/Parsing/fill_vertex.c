@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/08 23:04:39 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/10 17:12:08 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/11 15:07:45 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,8 +169,6 @@ static int         fill_v3(t_obj *obj, t_vertex *dest, char *line)
         return (1);
     dest->y = ft_atof2(&(line[i - 1]));
     i = find_next(line, i);
-    if (!line[i])
-        return (1);
     dest->z = ft_atof2(&(line[i]));
     return (0);
 }
