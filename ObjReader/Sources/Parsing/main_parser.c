@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/08 21:54:34 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/12 16:03:56 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/12 20:33:06 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,31 +56,53 @@ static int             adjust_allocation(t_obj *obj)
     return (0);
 }
 
-static char             *ft_memjoinfree(char *s1, char *s2, char tofree, long int (*size))
-{
-	char	*new;
-	int		i;
-	int		j;
-	int		k;
+// static char             *ft_memjoinfree(char *s1, char *s2, char tofree, long int (*size))
+// {
+// 	char	*new;
+// 	int		i;
+// 	int		j;
+// 	int		k;
 
-	if (!s1 || !s2)
-		return (NULL);
-	j = 0;
-	if (!(new = (char *)malloc(sizeof(char) *
-					((size)[0] + (size)[1]))))
-		return (NULL);
-    i = -1;
-    while (++i < (size)[0])
-        new[i] = s1[i];
-    j = -1;
-    while (++j < (size)[1])
-        new[i + j] = s2[j];
-	tofree & 0b1 ? free((void *)s1) : 0;
-	tofree & 0b10 ? free((void *)s2) : 0;
-    (size)[0] += (size)[1];
-    (size)[1] = 0;
-	return (new);
+// 	if (!s1 || !s2)
+// 		return (NULL);
+// 	j = 0;
+// 	if (!(new = (char *)malloc(sizeof(char) *
+// 					((size)[0] + (size)[1]))))
+// 		return (NULL);
+//     i = -1;
+//     while (++i < (size)[0])
+//         new[i] = s1[i];
+//     j = -1;
+//     while (++j < (size)[1])
+//         new[i + j] = s2[j];
+// 	tofree & 0b1 ? free((void *)s1) : 0;
+// 	tofree & 0b10 ? free((void *)s2) : 0;
+//     (size)[0] += (size)[1];
+//     (size)[1] = 0;
+// 	return (new);
        
+// }
+
+void            fill_file(char **file, t_lst_buff *buffer, long int length)
+{
+    long unsigned int   pos;
+    int                 i;
+    void                *ptr;
+
+    pos = 0;
+    while (buffer != NULL)
+    {
+        i = -1;
+        while (++i < 0b1111111111111110 && i < length)
+        {
+            (*file)[pos] = buffer->buff[i];
+            pos += 1;
+        }        
+        length -= 0b1111111111111110;
+        ptr = buffer;
+        buffer = buffer->next;
+        free(ptr);
+    }
 }
 
 int             main_parser(t_obj *obj)
@@ -95,33 +117,40 @@ int             main_parser(t_obj *obj)
     if (init_v_malloc(obj))
         return (objerror(obj, 1));
 
-    char    *file;
-    char    buffer[0b1111111111111110];
-    long int parsed_file[2];
-    long int mem_size[2];
-    size_t reader;
-    size_t   len_read;
+    char        *file;
+    long int    mem_size[2];
+    size_t      reader;
+    size_t      len_read;
+    t_lst_buff  *buffer_lst;
+    t_lst_buff  *lst;
 
     len_read = 0b1111111111111110;
-    parsed_file[0] = 0;
-    parsed_file[1] = 0;
-    reader = read(fd, buffer, len_read);
+    if (!(buffer_lst = malloc(sizeof(t_lst_buff))))
+        return (1);
+    reader = read(fd, buffer_lst->buff, len_read);
     if (reader == len_read + 1)
         printf("Reader error\n");
-    parsed_file[1] = reader;
-    mem_size[0] = 0;
     mem_size[1] = reader;
-    file = malloc(1);
-    file = ft_memjoinfree(file, buffer, 1, mem_size);
-    while ((reader = (size_t)read(fd, buffer, len_read)) == len_read)
+    if (!(buffer_lst->next = malloc(sizeof(t_lst_buff))))
+        return (1);
+    lst = buffer_lst->next;
+    while ((reader = (size_t)read(fd, lst->buff, len_read)) == len_read)
     {
-        mem_size[1] = reader;
-        file = ft_memjoinfree(file, buffer, 1, mem_size);
+        mem_size[1] += reader;
+        if (!(lst->next = malloc(sizeof(t_lst_buff))))
+            return (1);
+        lst =lst->next;
     }
-    mem_size[1] = reader;
-    file = ft_memjoinfree(file, buffer, 1, mem_size);
+    lst->next = NULL;
+    mem_size[1] += reader;
+    printf("SIZE%ld\n", mem_size[1]);
     if (reader == len_read + 1)
         printf("Reader error -1\n");
+    printf("Read end\n");
+    if (!(file = malloc(mem_size[1])))
+        return (1);
+    fill_file(&file, buffer_lst, mem_size[1]);
+    printf("Fill end\n");
     
     char    *tmp;
     char    *line;
@@ -131,8 +160,11 @@ int             main_parser(t_obj *obj)
     new = skip_whitespace(line);
     line = ft_memchr(new, '\n', mem_size[0]);
     line[0] = '\0';
-    while (line && mem_size[0])
+    mem_size[0] = mem_size[1];
+    while (line && new && mem_size[0])
     {
+        if (!(obj->line % 100000))
+            printf("%%%d ==> %ld\n", (int)(100 - ((float)mem_size[0] / (float)mem_size[1]) * 100.0), obj->line);
         if (new == NULL || !new[0])
            ;
         else if (new[0] == 'v')
@@ -165,16 +197,17 @@ int             main_parser(t_obj *obj)
             return (objerror(obj, 4));
         }
         line = ft_memchr(new, '\0', mem_size[0]);
-        line += 1;
         if (line == NULL)
             break ;
+        line += 1;
         mem_size[0] -= line - tmp;
-        if (mem_size[0] == 0)
-        break ;
+        if (mem_size[0] <= 0)
+            break ;
         tmp = line;
         new = skip_whitespace(line);
         line = ft_memchr(new, '\n', mem_size[0]);
-        line[0] = '\0';
+        if (line != NULL)
+            line[0] = '\0';
         obj->line++;
     }
     free(file);

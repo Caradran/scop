@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/09 20:21:07 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/12 16:06:32 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/12 17:39:47 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ void	transformations(t_glstruct glstruct, t_camera *camera)
 	lastFrame = currentFrame;
 	if (camera->rotflag)
 		rotation += deltaTime;
-	ret = proj_mat(90.0f * M_PI / 360.0, 1000.0f,  0.1f);
+	ret = proj_mat(90.0f * M_PI / 360.0, 10000.0f,  0.1f);
 	ret = mult_mat4(ret, creat_mat_camera(camera));
 	ret = mult_mat4(ret, scaling_mat4(init_v3(1, 640/480, 1)));
 	ret = mult_mat4(ret, model_mat(init_v3(3, 3, 3), init_v3(0.39, 0.39, 0.39), normalize_v3(init_v3(0, 0, 1)), (float)rotation));
@@ -164,7 +164,7 @@ void	update_camera(t_glstruct *glstruct, t_camera *camera)
 		glfwGetCursorPos(glstruct->window, &xpos, &ypos);
 		mouse_callback(xpos, ypos, camera);
     }
-    camera->speed = 20.50f * deltaTime;
+    camera->speed = 100.50f * deltaTime;
     if (glfwGetKey(glstruct->window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		exit (0);
     if (glfwGetKey(glstruct->window, GLFW_KEY_W) == GLFW_PRESS)

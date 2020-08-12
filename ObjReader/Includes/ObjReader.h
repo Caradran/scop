@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/08 20:17:18 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/09 19:54:02 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/12 20:10:41 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,12 @@ typedef	struct			s_face
 	int					*i_vn;
 	unsigned int		flag;
 }						t_face;
+
+typedef	struct			s_lst_buff
+{
+	char				buff[0b1111111111111110];
+	struct s_lst_buff	*next;
+}						t_lst_buff;
 
 typedef struct          s_obj
 {

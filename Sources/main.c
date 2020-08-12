@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/09 20:22:02 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/12 16:04:39 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/12 18:02:32 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,20 @@ int		runobj(t_glstruct glstruct, t_index ret, t_camera camera)
 	return (0);
 }
 
+// void	setup_vt(t_obj obj, t_index *index)
+// {
+// 	int i = -1;
+// 	while (++i < index->size / 13)
+// 	{
+// 		if (index->verts[(i * 13) + 4] == -1)
+// 			index->verts[(i * 13) + 4] = (index->verts[(i * 13) + 0] + fabs(obj.min.x)) / (obj.max.x + fabs(obj.min.x));
+// 		if (index->verts[(i * 13) + 5] == -1)
+// 			index->verts[(i * 13) + 5] = (index->verts[(i * 13) + 1] + fabs(obj.min.y)) / (obj.max.y + fabs(obj.min.y));//vt.x
+// 		if (index->verts[(i * 13) + 6] == -1)
+// 			index->verts[(i * 13) + 6] = (index->verts[(i * 13) + 2] + fabs(obj.min.z)) / (obj.max.z + fabs(obj.min.z));//vt.y
+// 	}
+// }
+
 int		main(int argc, char **argv)
 {
 	t_glstruct	glstruct;
@@ -102,7 +116,7 @@ int		main(int argc, char **argv)
         return (objerror(obj, 2));
     if (objload(argv[1]))
         return (objerror(obj, 1));
-
+	
 	/* Obj Checker */
 	int i = -1;
 	int j = -1;
@@ -141,8 +155,9 @@ int		main(int argc, char **argv)
 	// 	printf("index ID : %d\n", index_split.index[i]);
 	// }
 	/* Split Checker */
-	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+	printf("~~~~~~~~~~~~~~~~~~~~Vertex~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 	index = create_vert(*obj, index_split.index, size);
+	// printf("~~~~~~~~~~~~~~~~~~~~Texture~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 	// for (int i = 0; i < index.size / 13; i++)
 	// {
