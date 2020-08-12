@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/08 21:54:34 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/12 14:43:07 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/12 16:03:56 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,20 +122,17 @@ int             main_parser(t_obj *obj)
     file = ft_memjoinfree(file, buffer, 1, mem_size);
     if (reader == len_read + 1)
         printf("Reader error -1\n");
-
+    
     char    *tmp;
     char    *line;
     line = file;
     tmp = line;
     obj->line = 0;
-    printf("Before Parsing\n");
-    getchar();
-    while (line && mem_size[0] && line - file < mem_size[0])
+    new = skip_whitespace(line);
+    line = ft_memchr(new, '\n', mem_size[0]);
+    line[0] = '\0';
+    while (line && mem_size[0])
     {
-        mem_size[0] -= line - tmp;
-        tmp = line;
-        new = skip_whitespace(line);
-        // printf("Dist : %ld\t[%c]\n", new - line, new[0]);
         if (new == NULL || !new[0])
            ;
         else if (new[0] == 'v')
@@ -145,7 +142,6 @@ int             main_parser(t_obj *obj)
         }
         else if (new[0] == 'f')
         {
-            printf("Face find\n");
             if ((error = parsing_face(obj, new)))
                 return (objerror(obj, error));
         }
@@ -166,13 +162,21 @@ int             main_parser(t_obj *obj)
         else
         {
             printf("Invalid char\n");
-            getchar();
             return (objerror(obj, 4));
         }
+        line = ft_memchr(new, '\0', mem_size[0]);
+        line += 1;
+        if (line == NULL)
+            break ;
+        mem_size[0] -= line - tmp;
+        if (mem_size[0] == 0)
+        break ;
+        tmp = line;
+        new = skip_whitespace(line);
         line = ft_memchr(new, '\n', mem_size[0]);
+        line[0] = '\0';
         obj->line++;
     }
-    printf("Nb_line find : %ld\n", obj->line);
     free(file);
     printf("Min : %f\t\t%f\t\t%f\n", obj->min.x, obj->min.y, obj->min.z);
     printf("Max : %f\t\t%f\t\t%f\n", obj->max.x, obj->max.y, obj->max.z);

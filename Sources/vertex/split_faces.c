@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/08 17:54:11 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/11 14:31:14 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/12 16:04:47 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ int		*split_faces(t_obj *obj, int *size)
 	ret = fill_ret(ret, obj, &i);
 	size_malloc = i;
 	i = -1;
-	while (++i < size_malloc)
-		printf("%d\n", ret[i]);
+	// while (++i < size_malloc)
+	// 	printf("%d\n", ret[i]);
 	return (ret);
 }
