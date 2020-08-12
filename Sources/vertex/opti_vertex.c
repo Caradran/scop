@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/08 17:54:46 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/11 14:39:50 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/11 15:48:54 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,12 +37,12 @@ static void		fill_tmp(float (*tmp)[13], int *indices, t_obj *obj, int i)
 	(*tmp)[1] = obj->v[indices[i]].y;
 	(*tmp)[2] = obj->v[indices[i]].z;
 	(*tmp)[3] = obj->v[indices[i]].w;
-	(*tmp)[4] = obj->vt[indices[i + 1]].x;
-	(*tmp)[5] = obj->vt[indices[i + 1]].y;
-	(*tmp)[6] = obj->vt[indices[i + 1]].z;
-	(*tmp)[7] = obj->vn[indices[i + 2]].x;
-	(*tmp)[8] = obj->vn[indices[i + 2]].y;
-	(*tmp)[9] = obj->vn[indices[i + 2]].z;
+	(*tmp)[4] = (obj->vt[indices[i + 1] < 0 ? 0 : indices[i + 1]].x);
+	(*tmp)[5] = (obj->vt[indices[i + 1] < 0 ? 0 : indices[i + 1]].y);
+	(*tmp)[6] = (obj->vt[indices[i + 1] < 0 ? 0 : indices[i + 1]].z);
+	(*tmp)[7] = (obj->vn[indices[i + 1] < 0 ? 0 : indices[i + 1]].x);
+	(*tmp)[8] = (obj->vn[indices[i + 1] < 0 ? 0 : indices[i + 1]].y);
+	(*tmp)[9] = (obj->vn[indices[i + 1] < 0 ? 0 : indices[i + 1]].z);
 	(*tmp)[10] = 0;
 	(*tmp)[11] = 0;
 	(*tmp)[12] = 0;
@@ -88,11 +88,9 @@ t_index			create_vert(t_obj obj, int *index, int size)
 	i = -1;
 	while (++i < ret.index_size)
 		ret.index[i] = tmpi.index[i];
-	
 	i = -1;
 	while (++i < ret.size)
 		ret.verts[i] = tmpi.verts[i];
-
 	free(tmpi.index);
 	free(tmpi.verts);
 	return (ret);

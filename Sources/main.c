@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/09 20:22:02 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/11 14:41:16 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/12 14:35:45 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int		runobj(t_glstruct glstruct, t_index ret, t_camera camera)
 		glBindVertexArray(glstruct.vao);
 		// draw points 0-3 from the currently bound VAO with current in-use shader
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, glstruct.ebo);
-		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		glDrawElements(GL_TRIANGLES, ret.index_size, GL_UNSIGNED_INT, 0);
 		// glDrawArrays(GL_TRIANGLES, 1, 4);
 		// update other events like input handling
@@ -96,29 +96,29 @@ int		main(int argc, char **argv)
 	/* Obj Checker */
 	int i = -1;
 	int j = -1;
-	while (++i < obj->size_face[0])
-	{
-		j = -1;
-		while (++j < obj->face[i].size)
-			printf("Fv [%d][%d]: %d||%d||%d\n", i, j, obj->face[i].i_v[j], obj->face[i].i_vt[j], obj->face[i].i_vn[j]);
-	}
-	i = -1;
-	while (++i < obj->size_v[0])
-		printf("V : %f||%f||%f\n", obj->v[i].x, obj->v[i].y, obj->v[i].z);
-	i = -1;
-	while (++i < obj->size_vt[0])
-		printf("VT : %f||%f||%f\n", obj->vt[i].x, obj->vt[i].y, obj->vt[i].z);
-	i = -1;
-	while (++i < obj->size_vn[0])
-		printf("VN : %f||%f||%f\n", obj->vn[i].x, obj->vn[i].y, obj->vn[i].z);
-	/* Obj Checker */
-	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+	// while (++i < obj->size_face[0])
+	// {
+	// 	j = -1;
+	// 	while (++j < obj->face[i].size)
+	// 		printf("Fv [%d][%d]: %d||%d||%d\n", i, j, obj->face[i].i_v[j], obj->face[i].i_vt[j], obj->face[i].i_vn[j]);
+	// }
+	// i = -1;
+	// while (++i < obj->size_v[0])
+	// 	printf("V : %f||%f||%f\n", obj->v[i].x, obj->v[i].y, obj->v[i].z);
+	// i = -1;
+	// while (++i < obj->size_vt[0])
+	// 	printf("VT : %f||%f||%f\n", obj->vt[i].x, obj->vt[i].y, obj->vt[i].z);
+	// i = -1;
+	// while (++i < obj->size_vn[0])
+	// 	printf("VN : %f||%f||%f\n", obj->vn[i].x, obj->vn[i].y, obj->vn[i].z);
+	// /* Obj Checker */
+	// printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 	int size;
 	size = 0;
 	index_split.index = split_faces(obj, &size);
 	
-	for (int i = 0; i < 6; i++)
-		printf("==> [%d]\n", index_split.index[i * 3]);
+	// for (int i = 0; i < 6; i++)
+	// 	printf("==> [%d]\n", index_split.index[i * 3]);
 	/* /!\ Ne split pas actuellement */
 	/* Split Checker */
 	// i = -1;
@@ -141,5 +141,6 @@ int		main(int argc, char **argv)
 			printf("%f\t", index.verts[(i * 13) + j]);
 		printf("\n");
 	}
+	printf("======> %d\n", index.size);
 	return(runobj(glstruct, index, camera));
 }

@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/08 17:50:58 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/08 18:10:52 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/11 16:12:25 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	generate_vbo(GLuint *vbo, float points[], int len)
 {
 	glGenBuffers(1, vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, *vbo);
-	glBufferData(GL_ARRAY_BUFFER, len * sizeof(float), points, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, len, points, GL_STATIC_DRAW);
 }
 
 void	generate_ebo(GLuint *ebo, float points[], int len)

@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/08 21:54:34 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/11 17:15:07 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/12 14:43:07 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,66 +40,102 @@ static int            init_v_malloc(t_obj *obj)
     ft_memset(obj->vp, 0, sizeof(t_vertex) * 64);
     return (0);
 }
-
-static char     *ft_ralloc(char **str, long int newsize)
+static char     *ft_ralloc(char **str,  long int oldsize, long int newsize)
 {
 	char *res;
-
+    if (oldsize <= newsize)
+        return (*str);
 	if (!(res = ft_strnew(newsize)))
 		return (0);
-	res = ft_memcpy(res, *str, newsize / 2);
+	res = ft_memcpy(res, *str, oldsize);
 	ft_memdel((void **)str);
     return (res);
 }
-
 static int             adjust_allocation(t_obj *obj)
 {
     return (0);
 }
 
+static char             *ft_memjoinfree(char *s1, char *s2, char tofree, long int (*size))
+{
+	char	*new;
+	int		i;
+	int		j;
+	int		k;
+
+	if (!s1 || !s2)
+		return (NULL);
+	j = 0;
+	if (!(new = (char *)malloc(sizeof(char) *
+					((size)[0] + (size)[1]))))
+		return (NULL);
+    i = -1;
+    while (++i < (size)[0])
+        new[i] = s1[i];
+    j = -1;
+    while (++j < (size)[1])
+        new[i + j] = s2[j];
+	tofree & 0b1 ? free((void *)s1) : 0;
+	tofree & 0b10 ? free((void *)s2) : 0;
+    (size)[0] += (size)[1];
+    (size)[1] = 0;
+	return (new);
+       
+}
+
 int             main_parser(t_obj *obj)
 {
-    char    *line;
     char    *new;
     int     fd;
     int     error;
-    char    buffer[32000];
-    
-    char    *file;
-    long int parsed_file[2];
-    long int reader;
 
-    parsed_file[0] = 0;
-    parsed_file[1] = 32000;
     fd = open(obj->path, O_RDONLY);
     if (fd == -1)
         return (objerror(obj, 2));
     if (init_v_malloc(obj))
         return (objerror(obj, 1));
-        
-    obj->line = 1;
-    if (!(file = malloc(sizeof(parsed_file[1]))))
-        return (1);
-    printf("Hello\n");
-    while ((reader = read(fd, &(file[parsed_file[0]]), parsed_file[1])))
-    {
-        printf("Hello[%ld]\n", reader);
-        if (reader == -1)
-            break ;
-        if (reader < 32000)
-            break ;
-        parsed_file[0] += reader;
-        parsed_file[1] *= 2;
-        ft_ralloc(&(file), parsed_file[1]);
-    }
-    printf("asdasd\n");
-    parsed_file[0] += reader;
 
-    while ((line = ft_strchr(file, '\n')))
+    char    *file;
+    char    buffer[0b1111111111111110];
+    long int parsed_file[2];
+    long int mem_size[2];
+    size_t reader;
+    size_t   len_read;
+
+    len_read = 0b1111111111111110;
+    parsed_file[0] = 0;
+    parsed_file[1] = 0;
+    reader = read(fd, buffer, len_read);
+    if (reader == len_read + 1)
+        printf("Reader error\n");
+    parsed_file[1] = reader;
+    mem_size[0] = 0;
+    mem_size[1] = reader;
+    file = malloc(1);
+    file = ft_memjoinfree(file, buffer, 1, mem_size);
+    while ((reader = (size_t)read(fd, buffer, len_read)) == len_read)
     {
-        printf("hey\n");
+        mem_size[1] = reader;
+        file = ft_memjoinfree(file, buffer, 1, mem_size);
+    }
+    mem_size[1] = reader;
+    file = ft_memjoinfree(file, buffer, 1, mem_size);
+    if (reader == len_read + 1)
+        printf("Reader error -1\n");
+
+    char    *tmp;
+    char    *line;
+    line = file;
+    tmp = line;
+    obj->line = 0;
+    printf("Before Parsing\n");
+    getchar();
+    while (line && mem_size[0] && line - file < mem_size[0])
+    {
+        mem_size[0] -= line - tmp;
+        tmp = line;
         new = skip_whitespace(line);
-        //printf("[%ld] ==> %s\n", obj->line, new);
+        // printf("Dist : %ld\t[%c]\n", new - line, new[0]);
         if (new == NULL || !new[0])
            ;
         else if (new[0] == 'v')
@@ -109,6 +145,7 @@ int             main_parser(t_obj *obj)
         }
         else if (new[0] == 'f')
         {
+            printf("Face find\n");
             if ((error = parsing_face(obj, new)))
                 return (objerror(obj, error));
         }
@@ -124,15 +161,18 @@ int             main_parser(t_obj *obj)
             ;
         else if (new[0] == 'u')
             ;
+        else if (new[0] == '\n')
+            ;
         else
         {
-            printf("==> %s\n", new);
+            printf("Invalid char\n");
+            getchar();
             return (objerror(obj, 4));
         }
-        // line != NULL ? free(line) : 0;
+        line = ft_memchr(new, '\n', mem_size[0]);
         obj->line++;
     }
-    // line ? free(line) : 0;
+    printf("Nb_line find : %ld\n", obj->line);
     free(file);
     printf("Min : %f\t\t%f\t\t%f\n", obj->min.x, obj->min.y, obj->min.z);
     printf("Max : %f\t\t%f\t\t%f\n", obj->max.x, obj->max.y, obj->max.z);
