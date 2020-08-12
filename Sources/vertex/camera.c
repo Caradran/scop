@@ -97,6 +97,7 @@ void	transformations(t_glstruct glstruct, t_camera *camera)
 
 	ret = proj_mat(90.0f * M_PI / 360.0, 1000.0f,  0.1f);
 	ret = mult_mat4(ret, creat_mat_camera(camera));
+	ret = mult_mat4(ret, scaling_mat4(init_v3(1, 640/480, 1)));
 	ret = mult_mat4(ret, model_mat(init_v3(3, 3, 3), init_v3(0.39, 0.39, 0.39), normalize_v3(init_v3(0, 0, 1)), (float)glfwGetTime()));
 
 	// print_mat4(ret);

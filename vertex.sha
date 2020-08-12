@@ -13,7 +13,13 @@ uniform mat4 transform;
 void main()
 {
 
-  gl_Position = v * transform;
-  our_color = vt;
-  UV = vec2(vt);
+	gl_Position = v * transform;
+	UV = vec2(vt);
+
+	float level;
+	if (gl_VertexID % 2 == 1)
+		level = (gl_VertexID % 8) * 0.125;
+	else
+		level = 1 - ((gl_VertexID % 8) * 0.125);
+	our_color = vec3(level, level, level);
 }
