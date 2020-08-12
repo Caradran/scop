@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/09 20:21:07 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/11 14:37:12 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/12 16:06:32 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,7 +150,7 @@ void	update_camera(t_glstruct *glstruct, t_camera *camera)
 	lastFrame = currentFrame;  
 	glfwGetCursorPos(glstruct->window, &xpos, &ypos);
 	mouse_callback(xpos, ypos, camera);
-    camera->speed = 2.50f * deltaTime;
+    camera->speed = 20.50f * deltaTime;
     if (glfwGetKey(glstruct->window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		exit (0);
     if (glfwGetKey(glstruct->window, GLFW_KEY_W) == GLFW_PRESS)

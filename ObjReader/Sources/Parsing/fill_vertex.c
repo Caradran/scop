@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/08 23:04:39 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/12 14:41:01 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/12 15:55:34 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int         find_next(char *line, int i)
 {
-    while (line[i] && !ft_isspace(line[i]))
+    while (line[i] && !ft_isspace(line[i]) && line[i] != '\n')
         i++;
     while (line[i] && ft_isspace(line[i]) && line[i] != '\n')
         i++;

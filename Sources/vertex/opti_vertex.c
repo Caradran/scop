@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/08 17:54:46 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/11 15:48:54 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/12 16:04:37 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,12 @@ static void		fill_tmp(float (*tmp)[13], int *indices, t_obj *obj, int i)
 {
 	int	index;
 
-	if (indices[i] > obj->size_v[0] || indices[i] < 0)
-		printf("Error size_v, %d\n", indices[i]);
-	if (indices[i + 1] > obj->size_vt[0] || indices[i + 1] < 0)
-		printf("Error size_vt, %d\n", indices[i + 1]);
-	if (indices[i + 2] > obj->size_vn[0] || indices[i + 2] < 0)
-		printf("Error size_vn, %d\n", indices[i + 2]);
+	// if (indices[i] > obj->size_v[0] || indices[i] < 0)
+	// 	printf("Error size_v, %d\n", indices[i]);
+	// if (indices[i + 1] > obj->size_vt[0] || indices[i + 1] < 0)
+	// 	printf("Error size_vt, %d\n", indices[i + 1]);
+	// if (indices[i + 2] > obj->size_vn[0] || indices[i + 2] < 0)
+	// 	printf("Error size_vn, %d\n", indices[i + 2]);
 	(*tmp)[0] = obj->v[indices[i]].x;
 	(*tmp)[1] = obj->v[indices[i]].y;
 	(*tmp)[2] = obj->v[indices[i]].z;
@@ -75,9 +75,9 @@ t_index			create_vert(t_obj obj, int *index, int size)
             max += 1;   
         }
 		tmpi.index[i] = find;
-		printf("Find[%d] :\t%d\n", i, find);
+		// printf("Find[%d] :\t%d\n", i, find);
 	}
-	printf("Done\n");
+	// printf("Done\n");
 	
 	if (!(ret.verts = malloc(sizeof(float) * max * 13)))
 		return ((t_index){NULL, NULL});

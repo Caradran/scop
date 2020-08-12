@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/09 20:22:02 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/12 14:35:45 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/12 16:04:39 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,13 +134,13 @@ int		main(int argc, char **argv)
 	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 	index = create_vert(*obj, index_split.index, size);
 	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-	for (int i = 0; i < index.size / 13; i++)
-	{
-		printf("[%d] :", i);
-		for (int j = 0; j < 13; j++)
-			printf("%f\t", index.verts[(i * 13) + j]);
-		printf("\n");
-	}
-	printf("======> %d\n", index.size);
+	// for (int i = 0; i < index.size / 13; i++)
+	// {
+	// 	printf("[%d] :", i);
+	// 	for (int j = 0; j < 13; j++)
+	// 		printf("%f\t", index.verts[(i * 13) + j]);
+	// 	printf("\n");
+	// }
+	// printf("======> %d\n", index.size);
 	return(runobj(glstruct, index, camera));
 }
