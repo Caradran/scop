@@ -45,8 +45,11 @@ int		runobj(t_glstruct glstruct, t_index ret, t_camera camera)
 	printf("~~~~~~~~~~~~~~~~LOOP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 	camera.yaw = -90;
 	camera.pitch = 0;
+	camera.mouseflag = 1;
+	camera.polyflag = 0;
 	creat_camera(init_v3(0,0,-3), &camera);
 	glfwSetInputMode(glstruct.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
 	while (!glfwWindowShouldClose(glstruct.window))
 	{
 		// wipe the drawing surface clear
@@ -58,7 +61,14 @@ int		runobj(t_glstruct glstruct, t_index ret, t_camera camera)
 		glBindVertexArray(glstruct.vao);
 		// draw points 0-3 from the currently bound VAO with current in-use shader
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, glstruct.ebo);
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		if (camera.mouseflag)
+			glfwSetInputMode(glstruct.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		else
+			glfwSetInputMode(glstruct.window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		if (camera.polyflag)
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		else
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glDrawElements(GL_TRIANGLES, ret.index_size, GL_UNSIGNED_INT, 0);
 		// glDrawArrays(GL_TRIANGLES, 1, 4);
 		// update other events like input handling

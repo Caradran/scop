@@ -31,6 +31,14 @@ typedef struct  s_camera
 	float yaw;
 	float pitch;
 	float speed;
+	int mouseflag;
+	int polyflag;
+	int rotflag;
+	int textureflag;
+	int mouseinputflag;
+	int polyinputflag;
+	int rotinputflag;
+	int textureinputflag;
 }				t_camera;
 
 typedef struct	s_vert

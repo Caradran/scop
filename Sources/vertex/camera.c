@@ -92,13 +92,23 @@ static t_mat4 proj_mat(float fov, float far, float near)
 
 void	transformations(t_glstruct glstruct, t_camera *camera)
 {
+	static float deltaTime = 0;
+	static float lastFrame = 0;
+	static float rotation = 0;
+	float currentFrame;
 	t_mat4	ret;
 	float	test[16];
 
+	currentFrame = glfwGetTime();
+	deltaTime = currentFrame - lastFrame;
+	lastFrame = currentFrame;
+	if (camera->rotflag)
+		rotation += deltaTime;
 	ret = proj_mat(90.0f * M_PI / 360.0, 1000.0f,  0.1f);
 	ret = mult_mat4(ret, creat_mat_camera(camera));
 	ret = mult_mat4(ret, scaling_mat4(init_v3(1, 640/480, 1)));
-	ret = mult_mat4(ret, model_mat(init_v3(3, 3, 3), init_v3(0.39, 0.39, 0.39), normalize_v3(init_v3(0, 0, 1)), (float)glfwGetTime()));
+	ret = mult_mat4(ret, model_mat(init_v3(3, 3, 3), init_v3(0.39, 0.39, 0.39), normalize_v3(init_v3(0, 0, 1)), (float)rotation));
+
 
 	// print_mat4(ret);
 	int i = -1;
@@ -148,9 +158,12 @@ void	update_camera(t_glstruct *glstruct, t_camera *camera)
 
 	currentFrame = glfwGetTime();
 	deltaTime = currentFrame - lastFrame;
-	lastFrame = currentFrame;  
-	glfwGetCursorPos(glstruct->window, &xpos, &ypos);
-	mouse_callback(xpos, ypos, camera);
+	lastFrame = currentFrame;
+	if (camera->mouseflag)
+	{	
+		glfwGetCursorPos(glstruct->window, &xpos, &ypos);
+		mouse_callback(xpos, ypos, camera);
+    }
     camera->speed = 20.50f * deltaTime;
     if (glfwGetKey(glstruct->window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		exit (0);
@@ -166,4 +179,26 @@ void	update_camera(t_glstruct *glstruct, t_camera *camera)
         camera->pos = add_v3(camera->pos, scale_v3(camera->speed, camera->up));
     if (glfwGetKey(glstruct->window, GLFW_KEY_E) == GLFW_PRESS)
         camera->pos = sub_v3(camera->pos, scale_v3(camera->speed, camera->up));
+    if (glfwGetKey(glstruct->window, GLFW_KEY_SPACE) == GLFW_PRESS && camera->mouseinputflag)
+    {
+    	camera->mouseinputflag = 0;
+        camera->mouseflag = camera->mouseflag ? 0 : 1;
+    }
+    if (!(glfwGetKey(glstruct->window, GLFW_KEY_SPACE) == GLFW_PRESS))
+    	camera->mouseinputflag = 1;
+    if (glfwGetKey(glstruct->window, GLFW_KEY_P) == GLFW_PRESS && camera->polyinputflag)
+    {
+    	camera->polyinputflag = 0;
+        camera->polyflag = camera->polyflag ? 0 : 1;
+    }
+    if (!(glfwGetKey(glstruct->window, GLFW_KEY_P) == GLFW_PRESS))
+    	camera->polyinputflag = 1;
+    if (glfwGetKey(glstruct->window, GLFW_KEY_R) == GLFW_PRESS && camera->rotinputflag)
+    {
+    	camera->rotinputflag = 0;
+        camera->rotflag = camera->rotflag ? 0 : 1;
+    }
+    if (!(glfwGetKey(glstruct->window, GLFW_KEY_R) == GLFW_PRESS))
+    	camera->rotinputflag = 1;
+
 }
