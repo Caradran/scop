@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/08 23:04:39 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/12 15:55:34 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/13 16:48:40 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,20 +110,20 @@ static int         str_tov4(t_vertex4 *dest, char *line)
     i = find_next(line, i);
     if (!line[i])
         return (1);
-    dest->x = ft_atof2(&(line[i]));
+    dest->x = atof(&(line[i]));
     i = find_next(line, i);
     if (!line[i])
         return (1);
-    dest->y = ft_atof2(&(line[i]));
+    dest->y = atof(&(line[i]));
     i = find_next(line, i);
     if (!line[i])
         return (1);
-    dest->z = ft_atof2(&(line[i]));
+    dest->z = atof(&(line[i])); // Attention atof not ft_atof
     i = find_next(line, i);
     if (!line[i])
         dest->w = 1;
     else
-        dest->w = ft_atof2(&(line[i]));
+        dest->w = atof(&(line[i]));
     return (0);
 }
 
@@ -155,21 +155,45 @@ static int         fill_v4(t_obj *obj, t_vertex4 *v, char *line)
    return (0);
 }
 
-static int         fill_v3(t_obj *obj, t_vertex *dest, char *line)
+static int         fill_v3(t_obj *obj, t_vertex *dest, char *line, char type)
 {
     int i;
 
     i = 0;
     i = find_next(line, i);
+    i++;
     if (!line[i])
         return (1);
-    dest->x = ft_atof2(&(line[i]));
+    dest->x = atof(&(line[i]));
     i = find_next(line, i);
+    i++;
     if (!line[i])
         return (1);
-    dest->y = ft_atof2(&(line[i - 1]));
+    dest->y = atof(&(line[i - 1]));
     i = find_next(line, i);
-    dest->z = ft_atof2(&(line[i]));
+    i++;
+    dest->z = atof(&(line[i])); //atof
+    if (type == 1)
+    {
+        if (!obj->size_vt[0])
+        {
+            obj->vtmin.x = obj->vt[0].x;
+            obj->vtmin.y = obj->vt[0].y;
+            obj->vtmin.z = obj->vt[0].z;
+            obj->vtmax.x = obj->vt[0].x;
+            obj->vtmax.y = obj->vt[0].y;
+            obj->vtmax.z = obj->vt[0].z;
+        }
+        else
+        {
+            obj->vtmin.x > obj->vt[obj->size_vt[0]].x ? obj->vtmin.x = obj->vt[obj->size_vt[0]].x : 0;
+            obj->vtmin.y > obj->vt[obj->size_vt[0]].y ? obj->vtmin.y = obj->vt[obj->size_vt[0]].y : 0;
+            obj->vtmin.z > obj->vt[obj->size_vt[0]].z ? obj->vtmin.z = obj->vt[obj->size_vt[0]].z : 0;
+            obj->vtmax.x < obj->vt[obj->size_vt[0]].x ? obj->vtmax.x = obj->vt[obj->size_vt[0]].x : 0;
+            obj->vtmax.y < obj->vt[obj->size_vt[0]].y ? obj->vtmax.y = obj->vt[obj->size_vt[0]].y : 0;
+            obj->vtmax.z < obj->vt[obj->size_vt[0]].z ? obj->vtmax.z = obj->vt[obj->size_vt[0]].z : 0;
+        }
+    }
     return (0);
 }
 
@@ -182,17 +206,17 @@ int         fill_vertex(t_obj *obj, char *line, char type)
     }
     else if (type == 1)
     {
-        if (fill_v3(obj, &obj->vt[obj->size_vt[0]], line))
+        if (fill_v3(obj, &obj->vt[obj->size_vt[0]], line, type))
             return (1);
     }
     else if (type == 2)
     {
-        if (fill_v3(obj, &obj->vn[obj->size_vn[0]], line))
+        if (fill_v3(obj, &obj->vn[obj->size_vn[0]], line, type))
             return (1);
     }
     else if (type == 3)
     {
-        if (fill_v3(obj, &obj->vp[obj->size_vp[0]], line))
+        if (fill_v3(obj, &obj->vp[obj->size_vp[0]], line, type))
             return (1);
     }
     else

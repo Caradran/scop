@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/08 17:54:46 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/12 18:34:41 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/13 16:30:39 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static int		find_point(float *point, float tmp[13],int max)
 
 	i = -1;
 	while (++i < max)
-		if (!(ft_memcmp(&(point[i * 13]), tmp, 13)))
+		if (!(ft_memcmp(&(point[i * 13]), tmp, 13 * (sizeof(float)))))
 			return (i);
 	return (-1);
 }
@@ -85,8 +85,10 @@ t_index			create_vert(t_obj obj, int *index, int size)
     find = 0;
     while (++i < size * 3)
     {
+		// if (!(i % 10000))
+		// 	printf("%f %%\n", ((float)i /(size * 3.0) * 100.0));
         fill_tmp(&tmp, index, &obj, i * 3);
-        if ((find = find_point(tmpi.verts, tmp, max)) == -1)
+		if (obj.size_face[0] > (long int)100000 || (find = find_point(tmpi.verts, tmp, max)) == -1)
         {
             ft_memcpy(&(tmpi.verts[max * 13]), tmp, 13 * sizeof(float));
             find = max;
@@ -94,19 +96,24 @@ t_index			create_vert(t_obj obj, int *index, int size)
         }
 		tmpi.index[i] = find;
 	}
-	if (!(ret.verts = malloc(sizeof(float) * max * 13)))
-		return ((t_index){NULL, NULL});
-	if (!(ret.index = malloc(sizeof(int) * i * 9)))
-		return ((t_index){NULL, NULL});
-	ret.size = max * 13;
-	ret.index_size = i;
-	i = -1;
-	while (++i < ret.index_size)
-		ret.index[i] = tmpi.index[i];
-	i = -1;
-	while (++i < ret.size)
-		ret.verts[i] = tmpi.verts[i];
-	free(tmpi.index);
-	free(tmpi.verts);
-	return (ret);
+	tmpi.size = max * 13;
+	tmpi.index_size = i;
+	return(tmpi);
+	// tmpi.size = max * 13;
+	// tmpi.index_size = i;
+	// if (!(ret.verts = malloc(sizeof(float) * max * 13)))
+	// 	return ((t_index){NULL, NULL});
+	// if (!(ret.index = malloc(sizeof(int) * i * 9)))
+	// 	return ((t_index){NULL, NULL});
+	// ret.size = max * 13;
+	// ret.index_size = i;
+	// i = -1;
+	// while (++i < ret.index_size)
+	// 	ret.index[i] = tmpi.index[i];
+	// i = -1;
+	// while (++i < ret.size)
+	// 	ret.verts[i] = tmpi.verts[i];
+	// free(tmpi.index);
+	// free(tmpi.verts);
+	// return (ret);
 }

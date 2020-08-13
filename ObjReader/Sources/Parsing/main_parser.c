@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/08 21:54:34 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/12 20:33:06 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/13 14:11:14 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,14 +157,24 @@ int             main_parser(t_obj *obj)
     line = file;
     tmp = line;
     obj->line = 0;
-    new = skip_whitespace(line);
+    mem_size[0] = mem_size[1];
+    new = skip_whitespace(line, mem_size[0]);
+    if (new == NULL)
+        return (objerror(obj, 4));
     line = ft_memchr(new, '\n', mem_size[0]);
     line[0] = '\0';
-    mem_size[0] = mem_size[1];
     while (line && new && mem_size[0])
     {
-        if (!(obj->line % 100000))
-            printf("%%%d ==> %ld\n", (int)(100 - ((float)mem_size[0] / (float)mem_size[1]) * 100.0), obj->line);
+        if (!(obj->line % 1000000))
+        {
+            printf("%%%d ==> %ld || %lu\n", (int)(100 - ((float)mem_size[0] / (float)mem_size[1]) * 100.0), obj->line, mem_size[0]);
+            // printf("Actuellement :\n");
+            // printf("\t\t. %ld\t\t= v~\t\t%ld\t(Mallocated)\n", obj->size_v[0], obj->size_v[1]);
+            // printf("\t\t. %ld\t\t= vt\t\t%ld\t(Mallocated)\n", obj->size_vt[0], obj->size_vt[1]);
+            // printf("\t\t. %ld\t\t= vn\t\t%ld\t(Mallocated)\n", obj->size_vn[0], obj->size_vn[1]);
+            // printf("\t\t. %ld\t\t= vp\t\t%ld\t(Mallocated)\n", obj->size_vp[0], obj->size_vp[1]);
+            // printf("\t\t. %ld\t\t= f~\t\t%ld\t(Mallocated)\n", obj->size_face[0], obj->size_face[1]);
+        }
         if (new == NULL || !new[0])
            ;
         else if (new[0] == 'v')
@@ -193,26 +203,44 @@ int             main_parser(t_obj *obj)
             ;
         else
         {
-            printf("Invalid char\n");
+            printf("Invalid char : %s\n", new);
             return (objerror(obj, 4));
         }
         line = ft_memchr(new, '\0', mem_size[0]);
         if (line == NULL)
             break ;
         line += 1;
+        while (mem_size[0] && line[0] == '\n')
+        {
+            line++;
+            mem_size[0] -= 1;
+        }
         mem_size[0] -= line - tmp;
         if (mem_size[0] <= 0)
             break ;
         tmp = line;
-        new = skip_whitespace(line);
+        if ((obj->line > 51777300))
+            printf("Before Skip\n");
+        new = skip_whitespace(line, mem_size[0]);
+        if (new == NULL)
+            break ;
+        if ((obj->line > 51777300))
+            printf("Skip\n");
         line = ft_memchr(new, '\n', mem_size[0]);
+        if ((obj->line > 51777300))
+            printf("Skip\n");
         if (line != NULL)
             line[0] = '\0';
+        else
+            break ;
         obj->line++;
     }
+    printf("Parsing Done\n");
     free(file);
     printf("Min : %f\t\t%f\t\t%f\n", obj->min.x, obj->min.y, obj->min.z);
     printf("Max : %f\t\t%f\t\t%f\n", obj->max.x, obj->max.y, obj->max.z);
+    printf("Min : %f\t\t%f\t\t%f\n", obj->vtmin.x, obj->vtmin.y, obj->vtmin.z); // useless ?
+    printf("Max : %f\t\t%f\t\t%f\n", obj->vtmax.x, obj->vtmax.y, obj->vtmax.z);
     obj->center.x = (obj->min.x + obj->max.x / 2.0);
     obj->center.y = (obj->min.y + obj->max.y / 2.0);
     obj->center.z = (obj->min.z + obj->max.z / 2.0);

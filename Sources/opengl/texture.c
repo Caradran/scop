@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/08 17:53:23 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/12 18:36:37 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/13 16:35:55 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int		setup_texture(void)
 	int			index_txt;
 	GLuint		textureID;
 
-	if (!(texture = load_tga("Loading.tga")))
+	if (!(texture = load_tga("Jinx.tga")))
 		return (0);
 	for (int i = 0; i < (texture->w * texture->h) - 1; i++)
 		((unsigned int *)texture->data)[i] = ((((unsigned int *)texture->data)[i] & 0xFF) << 24) +
@@ -32,8 +32,8 @@ int		setup_texture(void)
 	glGenerateMipmap(GL_TEXTURE_2D);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_LINEAR);
 	index++;
 	return (1);
 }

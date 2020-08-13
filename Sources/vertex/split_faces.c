@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/08 17:54:11 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/12 18:02:07 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/13 15:41:42 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int		split_other(int **ret, t_obj *obj, int index, int *i)
 {
 	int j;
 	int	save[3];
+
 	j = -1;
 	save[0] = obj->face[index].i_v[0] - 1;
 	save[1] = obj->face[index].i_vt[0] - 1;
@@ -76,6 +77,5 @@ int		*split_faces(t_obj *obj, int *size)
 	ret = fill_ret(ret, obj, &i);
 	size_malloc = i;
 	i = -1;
-	getchar();
 	return (ret);
 }

@@ -49,7 +49,7 @@ FRAMEWORK		=	Cocoa OpenGL
 
 PKG				=	glfw3 glew
 
-CC				=	cc -g3
+CC				=	cc -Ofast
 
 CFLAG			=	
 #-Wall -Wextra -Werror

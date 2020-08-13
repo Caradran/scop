@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/09 20:22:02 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/12 18:02:32 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/13 15:42:18 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ int		runobj(t_glstruct glstruct, t_index ret, t_camera camera)
 		print_error(2);
 	glfwMakeContextCurrent(glstruct.window);
 	init_glew();
-	
+
+
 	if (DEBUG)
 	{
 		const GLubyte* renderer = glGetString(GL_RENDERER); // get renderer string
@@ -157,8 +158,10 @@ int		main(int argc, char **argv)
 	/* Split Checker */
 	printf("~~~~~~~~~~~~~~~~~~~~Vertex~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 	index = create_vert(*obj, index_split.index, size);
+	printf("~~~~~~~~~~~~~~~~~~~~FreeObj~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+	// free_obj(obj);
+	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 	// printf("~~~~~~~~~~~~~~~~~~~~Texture~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 	// for (int i = 0; i < index.size / 13; i++)
 	// {
 	// 	printf("[%d] :", i);
