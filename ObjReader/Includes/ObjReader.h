@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/08 20:17:18 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/13 14:07:06 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/15 14:37:23 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,12 @@
 # include "../libft/libft.h"
 # include "../Includes/ObjError.h"
 # include "../libft/get_next_line.h"
+
+# define INFO			1
+# define MEMORY			1 << 1
+# define TRIANGLE		1 << 2
+# define REMOVE_DOUBLE	1 << 3
+# define UNINDEX		1 << 4
 
 typedef struct			s_vertex4
 {
@@ -42,6 +48,15 @@ typedef	struct			s_face
 	unsigned int		flag;
 }						t_face;
 
+typedef struct			s_group
+{
+	long int			size_face[2];
+	char				*material;
+	char				*path;
+	t_face				*face;
+	struct	s_group		*next;
+}						t_group;
+
 typedef	struct			s_lst_buff
 {
 	char				buff[0b1111111111111110];
@@ -52,14 +67,16 @@ typedef struct          s_obj
 {
 	int					id;
 	int					sub_id;
+	int					flag;
 	long int			line;
 	char				*path;
+	char				*mtlib;
+	long int			size_face[2];
 	long int			size_v[2];
 	long int			size_vt[2];
 	long int			size_vn[2];
 	long int			size_vp[2];
-	long int			size_face[2];
-	t_face				*face;
+	t_group				*group;
 	t_vertex4			*v;
 	t_vertex			*vt;
 	t_vertex			*vn;
@@ -80,7 +97,7 @@ char        			*skip_whitespace(char *str, long int max);
 void       				*realloc_vertex(t_obj *obj, char type, void **dest);
 int       				fill_vertex(t_obj *obj, char *line, char type);
 int       				find_next(char *line, int i);
-int       				parsing_face(t_obj *obj, char *line);
+int       				parsing_face(t_obj *obj, t_group *ptr, char *line);
 int      				parsing_vertex(t_obj *obj, char *line);
 int       				main_parser(t_obj *obj);
 
@@ -89,7 +106,7 @@ int       				main_parser(t_obj *obj);
 */
 
 void    				free_obj(t_obj *obj);
-int         			objload(char *path);
+int         			objload(char *path, int flag);
 int         			objerror(t_obj *obj, int code);
 t_obj       			*getobj(t_obj *obj);
 int						init_obj(t_obj *obj);

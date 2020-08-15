@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/09 20:22:02 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/13 15:42:18 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/15 18:57:21 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,20 @@
 #include <stdlib.h>
 #include "../Include/scop.h"
 
-int		runobj(t_glstruct glstruct, t_index ret, t_camera camera)
+int		init_everything(t_glstruct *glstruct)
 {
 	init_glfw();
-	if (!(glstruct.window = glfwCreateWindow(640, 480, "Hello Triangle", NULL, NULL)))
+	if (!(glstruct->window = glfwCreateWindow(640, 480, "Hello Triangle", NULL, NULL)))
 		print_error(2);
-	glfwMakeContextCurrent(glstruct.window);
+	glfwMakeContextCurrent(glstruct->window);
 	init_glew();
+	return (0);
+}
 
+int		runobj(t_glstruct glstruct, t_index *ret, t_camera camera, int nb_obj)
+{
+	int		i;
+	GLuint text[2];
 
 	if (DEBUG)
 	{
@@ -30,19 +36,20 @@ int		runobj(t_glstruct glstruct, t_index ret, t_camera camera)
 		printf("Renderer: %s\n", renderer);
 		printf("OpenGL version supported %s\n", version);
 	}
-
-	generate_vbo(&glstruct.vbo, ret.verts, sizeof(float) * ret.size);
+	printf("~~~~~~~~~~~~~~~~Vbo_Vao_Ebo~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+	generate_vbo(&glstruct.vbo, ret->verts, sizeof(float) * ret->size);
+	printf("~~~~~~~~~~~~~~~~Vbo_Vao_Ebo~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 	generate_vao(&glstruct.vao, glstruct.vbo);
-	generate_ebo(&glstruct.ebo, (float*)ret.index, (ret.index_size) * sizeof(int));
-
-	if (!setup_texture())
+	printf("~~~~~~~~~~~~~~~~Vbo_Vao_Ebo~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+	generate_ebo(&glstruct.ebo, (float*)ret->index, (ret->index_size));
+	printf("~~~~~~~~~~~~~~~~Shader~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+	glstruct.shader_program = create_program();
+	printf("~~~~~~~~~~~~~~~~Texture~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+	if (!setup_texture(&glstruct, text))
 	{
 		ft_putendl("Error Mallocated TGA file\n");
 		return (-1);
 	}
-
-	glstruct.shader_program = create_program();
-
 	printf("~~~~~~~~~~~~~~~~LOOP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 	camera.yaw = -90;
 	camera.pitch = 0;
@@ -56,6 +63,12 @@ int		runobj(t_glstruct glstruct, t_index ret, t_camera camera)
 		// wipe the drawing surface clear
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, text[0]);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, text[1]);
+
 		transformations(glstruct, &camera);
 		update_camera(&glstruct, &camera);
 		glUseProgram(glstruct.shader_program);
@@ -70,7 +83,7 @@ int		runobj(t_glstruct glstruct, t_index ret, t_camera camera)
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		else
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		glDrawElements(GL_TRIANGLES, ret.index_size, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, ret[0].index_size, GL_UNSIGNED_INT, 0);
 		// glDrawArrays(GL_TRIANGLES, 1, 4);
 		// update other events like input handling
 		glfwPollEvents();
@@ -84,27 +97,16 @@ int		runobj(t_glstruct glstruct, t_index ret, t_camera camera)
 	return (0);
 }
 
-// void	setup_vt(t_obj obj, t_index *index)
-// {
-// 	int i = -1;
-// 	while (++i < index->size / 13)
-// 	{
-// 		if (index->verts[(i * 13) + 4] == -1)
-// 			index->verts[(i * 13) + 4] = (index->verts[(i * 13) + 0] + fabs(obj.min.x)) / (obj.max.x + fabs(obj.min.x));
-// 		if (index->verts[(i * 13) + 5] == -1)
-// 			index->verts[(i * 13) + 5] = (index->verts[(i * 13) + 1] + fabs(obj.min.y)) / (obj.max.y + fabs(obj.min.y));//vt.x
-// 		if (index->verts[(i * 13) + 6] == -1)
-// 			index->verts[(i * 13) + 6] = (index->verts[(i * 13) + 2] + fabs(obj.min.z)) / (obj.max.z + fabs(obj.min.z));//vt.y
-// 	}
-// }
-
 int		main(int argc, char **argv)
 {
 	t_glstruct	glstruct;
-	t_index		index_split;
-	t_index		index;
+	t_index		index_split[2];
+	t_index		index[2];
 	t_camera 	camera;
 	t_obj		*obj;
+	int 		i = -1;
+	int 		j = -1;
+	int 		size;
 
 	if (argc == 1)
 		return (0);
@@ -113,62 +115,36 @@ int		main(int argc, char **argv)
         return (objerror(NULL, 1));
     if (init_obj(obj) == -1)
         return (objerror(obj, -1));
-    if (argc < 2 || argc > 2)
+    if (argc < 2 || argc > 3)
         return (objerror(obj, 2));
-    if (objload(argv[1]))
+	printf("First Parsing\n");
+    if (objload(argv[1], INFO))
         return (objerror(obj, 1));
-	
-	/* Obj Checker */
-	int i = -1;
-	int j = -1;
-	// while (++i < obj->size_face[0])
-	// {
-	// 	j = -1;
-	// 	while (++j < obj->face[i].size)
-	// 		printf("Fv [%d][%d]: %d||%d||%d\n", i, j, obj->face[i].i_v[j], obj->face[i].i_vt[j], obj->face[i].i_vn[j]);
-	// }
-	// i = -1;
-	// while (++i < obj->size_v[0])
-	// 	printf("V : %f||%f||%f\n", obj->v[i].x, obj->v[i].y, obj->v[i].z);
-	// i = -1;
-	// while (++i < obj->size_vt[0])
-	// 	printf("VT : %f||%f||%f\n", obj->vt[i].x, obj->vt[i].y, obj->vt[i].z);
-	// i = -1;
-	// while (++i < obj->size_vn[0])
-	// 	printf("VN : %f||%f||%f\n", obj->vn[i].x, obj->vn[i].y, obj->vn[i].z);
-	// /* Obj Checker */
-	// printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-	int size;
-	size = 0;
-	index_split.index = split_faces(obj, &size);
-	
-	// for (int i = 0; i < 6; i++)
-	// 	printf("==> [%d]\n", index_split.index[i * 3]);
-	/* /!\ Ne split pas actuellement */
-	/* Split Checker */
-	// i = -1;
-	// while (++i < size * 9)
-	// {
-	// 	if (!(i%9))
-	// 		printf("Face : %d\n", i / 3);
-	// 	if (!(i%3))
-	// 		printf("Point : %d\n", i / 3);
-	// 	printf("index ID : %d\n", index_split.index[i]);
-	// }
-	/* Split Checker */
-	printf("~~~~~~~~~~~~~~~~~~~~Vertex~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-	index = create_vert(*obj, index_split.index, size);
-	printf("~~~~~~~~~~~~~~~~~~~~FreeObj~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+	if (argc > 2)
+	{
+		printf("Second Parsing\n");
+    	if (objload(argv[2], INFO))
+        	return (objerror(obj, 1));
+	}
+	i = 0;
+	while (obj)
+	{
+		printf("Obj : %s\n", obj->path);
+		printf("~~~~~~~~~~~~~~~~~~~~Splits~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+		size = 0;
+		split_faces(obj, &size, &(index_split[i]));
+		printf("~~~~~~~~~~~~~~~~~~~~Vertex~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+		index[i] = create_vert(*obj, index_split[i].index, size, index_split[i].index_txt);
+		printf("~~~~~~~~~~~~~~~~~~~~Vertex Done~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+		if (!obj->next)
+			break ;
+		obj = obj->next;
+		++i;
+	}
+	printf("\n~~~~~~~~~~~~~~~~~~~~FreeObj~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 	// free_obj(obj);
+	printf("~~~~~~~~~~~~~~~~~~~~Init Opengl~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+	init_everything(&glstruct);
 	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-	// printf("~~~~~~~~~~~~~~~~~~~~Texture~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-	// for (int i = 0; i < index.size / 13; i++)
-	// {
-	// 	printf("[%d] :", i);
-	// 	for (int j = 0; j < 13; j++)
-	// 		printf("%f\t", index.verts[(i * 13) + j]);
-	// 	printf("\n");
-	// }
-	// printf("======> %d\n", index.size);
-	return(runobj(glstruct, index, camera));
+	return(runobj(glstruct, index, camera, i + 1));
 }

@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/09 20:07:31 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/11 15:01:25 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/14 16:49:03 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,36 @@
 t_obj       *getobj(t_obj *obj)
 {
     static t_obj *save = NULL;
+    t_obj *tmp;
     
+    if (obj == (t_obj *)0x1 && save)
+        save = NULL;
+    else if (obj == (void *)(MEMORY))
+    {
+        printf("FreeObj Asked with Obj in memory\n");
+        return (NULL);
+    }
     if (save == NULL && obj)
         save = obj;
     else if (save != NULL && obj != NULL)
     {
         printf("Send Null to this function to get obj pointeur\n");
         return (NULL);
+    }
+    if (save->path)
+    {
+        tmp = save;
+        while (tmp->next != NULL)
+            tmp = tmp->next;
+        if (!(tmp->next = ft_memalloc(sizeof(t_obj))))
+            return (NULL); // Should Return FreeObj
+        return (tmp->next);
+    }
+    if (obj == (void *)(UNINDEX))
+    {
+        tmp = save;
+        save = NULL;
+        return (tmp);
     }
     return (save);
 }

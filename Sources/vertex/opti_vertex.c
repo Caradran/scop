@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/08 17:54:46 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/13 16:30:39 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/15 18:45:26 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static int		find_point(float *point, float tmp[13],int max)
 	return (-1);
 }
 
-static void		fill_tmp(float (*tmp)[13], int *indices, t_obj *obj, int i)
+static void		fill_tmp(float (*tmp)[13], int *indices, t_obj *obj, int i, float IDTXT)
 {
 	int	index;
 
@@ -47,7 +47,7 @@ static void		fill_tmp(float (*tmp)[13], int *indices, t_obj *obj, int i)
 	{
 		(*tmp)[4] = obj->vt[indices[i + 1]].x;
 		(*tmp)[5] = obj->vt[indices[i + 1]].y;
-		(*tmp)[6] = obj->vt[indices[i + 1]].z;
+		(*tmp)[6] = IDTXT;
 	}
 	if (indices[i + 2] == -1)
 	{
@@ -66,7 +66,7 @@ static void		fill_tmp(float (*tmp)[13], int *indices, t_obj *obj, int i)
 	(*tmp)[12] = 0;
 }
 
-t_index			create_vert(t_obj obj, int *index, int size)
+t_index			create_vert(t_obj obj, int *index, int size, int *txt)
 {
 	t_index		tmpi;
 	t_index		ret;
@@ -76,6 +76,7 @@ t_index			create_vert(t_obj obj, int *index, int size)
     int	 		j;
 	int			find;
 
+	printf("Size : %d => %d\n", size, size * 9 * 13);
 	if (!(tmpi.verts = ft_memalloc(sizeof(float) * size * 9 * 13)))
 		return ((t_index){NULL, NULL});
 	if (!(tmpi.index = ft_memalloc(sizeof(int) * size * 9)))
@@ -85,9 +86,9 @@ t_index			create_vert(t_obj obj, int *index, int size)
     find = 0;
     while (++i < size * 3)
     {
-		// if (!(i % 10000))
-		// 	printf("%f %%\n", ((float)i /(size * 3.0) * 100.0));
-        fill_tmp(&tmp, index, &obj, i * 3);
+		if (!(i % 10000))
+			printf("%f %%\n", ((float)i /(size * 3.0) * 100.0));
+        fill_tmp(&tmp, index, &obj, i * 3, txt[(i /  13) / 9]);
 		if (obj.size_face[0] > (long int)100000 || (find = find_point(tmpi.verts, tmp, max)) == -1)
         {
             ft_memcpy(&(tmpi.verts[max * 13]), tmp, 13 * sizeof(float));

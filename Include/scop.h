@@ -77,6 +77,7 @@ typedef struct	s_index
 {
 	float		*verts;
 	int			*index;
+	int			*index_txt;
 	int			index_size;
 	int			size;
 }				t_index;
@@ -107,10 +108,8 @@ void		init_glfw(void);
 char		*readshad(char *source, int *i);
 t_obj		parse(char *filename);
 void		parse_all_vert(char *buffer, t_obj *obj, int *j);
-
 float		*vect_toa(t_obj obj);
 int 		**faces_toa(t_obj obj);
-
 int			check_error_obj(t_obj *obj);
 
 /* ------------------- */
@@ -120,41 +119,44 @@ int			check_error_obj(t_obj *obj);
 */
 
 
-int			setup_texture(void);
+int			setup_texture(t_glstruct *glstruct, GLuint *textureID);
 GLuint		ft_shader(char *name, GLenum shader_type);
 GLuint		create_program(void);
 void		generate_vbo(GLuint *vbo, float points[], int len);
 void		generate_ebo(GLuint *ebo, float points[], int len);
 void		generate_vao(GLuint *vao, GLuint vbo);
+void		generate_vbo2(GLuint *vbo, float points[], int len, t_index *index, int nb);
+void		generate_ebo2(GLuint *ebo, float points[], int len, t_index *index, int nb);
+void		generate_vao2(GLuint *vao, GLuint vbo, t_index *index, int nb);
 
 
 /*
 *	Camera and object transformation functions
 */
 
-void	creat_camera(t_vec3 pos,  t_camera *camera);
-void	transformations(t_glstruct glstruct, t_camera *camera);
-void	update_camera(t_glstruct *glstruct, t_camera *camera);
+void		creat_camera(t_vec3 pos,  t_camera *camera);
+void		transformations(t_glstruct glstruct, t_camera *camera);
+void		update_camera(t_glstruct *glstruct, t_camera *camera);
 
 
 /*
 *	Vertex
 */
 
-t_index			create_vert(t_obj obj, int *index, int size);
+t_index		create_vert(t_obj obj, int *index, int size, int *txt);
 void		set_max_vs(t_obj	*obj);
-int		*split_faces(t_obj *obj, int *size);
+int			*split_faces(t_obj *obj, int *size, t_index *ret);
 
 /*
 *	Verbose debuging functions.
 */
 
-void	print_obj(t_obj obj);
-void	print_vert(t_vert vert, int type);
-void	print_array(float *array, t_obj obj);
-void	print_error(int i);
-void	print_index_nb(char *str, int *index, int nb, int ln);
-void	print_indices(int **indices, t_obj obj);
+void		print_obj(t_obj obj);
+void		print_vert(t_vert vert, int type);
+void		print_array(float *array, t_obj obj);
+void		print_error(int i);
+void		print_index_nb(char *str, int *index, int nb, int ln);
+void		print_indices(int **indices, t_obj obj);
 
 /* ------------------- */
 

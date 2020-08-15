@@ -12,6 +12,7 @@ SRC				=	main.c							\
 					initialize/init_glfw.c			\
 					initialize/init_parse.c			\
 					opengl/generate.c				\
+					opengl/generate_multi.c			\
 					opengl/shader.c					\
 					opengl/texture.c				\
 					other/error.c					\
