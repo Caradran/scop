@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/08 21:54:34 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/15 18:05:26 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/16 15:27:03 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,6 @@ void            fill_file(char **file, t_lst_buff *buffer, long int length)
 int			init_newgroup(t_group *ptr)
 {
 	ptr->material = NULL;
-	ptr->path = NULL;
 	ptr->size_face[0] = 0;
 	ptr->size_face[1] = 64;
 	if (!(ptr->face = malloc(sizeof(t_face) * 64)))
@@ -119,7 +118,6 @@ int             main_parser(t_obj *obj)
 	int     fd;
 	int     error;
 
-	obj->line = -1;
 	fd = open(obj->path, O_RDONLY);
 	if (fd == -1)
 		return (objerror(obj, 2));
@@ -175,8 +173,6 @@ int             main_parser(t_obj *obj)
 		return (objerror(obj, 4));
 	line = ft_memchr(new, '\n', mem_size[0]);
 	line[0] = '\0';
-	if ((error = init_newgroup(ptr)))
-		return (objerror(obj, 1));
 	while (line && new && mem_size[0])
 	{
 		if (!(obj->line % 100000))
