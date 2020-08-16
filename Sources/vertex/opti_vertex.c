@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/08 17:54:46 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/16 18:35:28 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/16 18:51:06 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,10 @@ int				create_vert(t_obj obj, t_index **ret, int *index, int size, t_group *ptr_
         }
 		(*ret)->index[i] = find;
 	}
-	(*ret)->index_txt = find_material(obj, ptr_grp->material);
+	if (ptr_grp->material)
+		(*ret)->index_txt = find_material(obj, ptr_grp->material);
+	else
+		(*ret)->index_txt = -1;
 	(*ret)->verts_size = max * 13;
 	(*ret)->face_size = i;
 	return (0);

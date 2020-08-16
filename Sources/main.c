@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/09 20:22:02 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/16 18:45:38 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/16 18:55:49 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,9 +116,7 @@ int		runobj(t_glstruct glstruct, t_index *ret, t_camera camera, int nb_obj, t_ob
 		else
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		change_alpha(glstruct, camera);
-		printf("Ici ?\n");
 		glDrawElements(GL_TRIANGLES, ret->verts_size, GL_UNSIGNED_INT, 0);
-		printf("Crash\n");
 		// glDrawArrays(GL_TRIANGLES, 1, 4);
 		// update other events like input handling
 		glfwPollEvents();
@@ -165,6 +163,8 @@ int		main(int argc, char **argv)
 		i++;
 	}
 	t_group *ptr_grp;
+	t_obj *tmp_obj;
+	tmp_obj = obj;
 	i = 0;
 	index.next = NULL;
 	ptr = &index;
@@ -206,5 +206,5 @@ int		main(int argc, char **argv)
 	printf("~~~~~~~~~~~~~~~~~~~~Init Opengl~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 	init_everything(&glstruct);
 	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-	return(runobj(glstruct, &index, camera, i + 1, obj));
+	return(runobj(glstruct, &index, camera, i + 1, tmp_obj));
 }

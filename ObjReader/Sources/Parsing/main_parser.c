@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/08 21:54:34 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/16 18:32:32 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/16 18:49:42 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,6 +164,7 @@ int             main_parser(t_obj *obj)
 	t_group	*ptr;
 
 	ptr = obj->group;
+	ptr->material = NULL;
 	line = file;
 	tmp = line;
 	obj->line = 0;
