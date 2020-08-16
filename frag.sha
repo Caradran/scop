@@ -1,7 +1,7 @@
 #version 400
 
 in vec3 our_color;
-in vec3 UV;
+in vec2 UV;
 
 out vec4 frag_color;
 
@@ -11,8 +11,5 @@ uniform sampler2D texture2;
 void main()
 {
 	frag_color = vec4(our_color, 1.0f) * 0.5;
-	if (UV.z == 0.0)
-		frag_color = texture(texture1, vec2(UV));
-	else
-		frag_color = texture(texture2, vec2(UV));
+	frag_color = texture(texture1, vec2(UV));
 }

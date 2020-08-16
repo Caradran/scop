@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/16 14:25:00 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/16 15:41:30 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/16 18:11:06 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,5 +100,6 @@ t_material      *mtlparser(char *path)
         printf("\t\tTexture : %s\n\n", mat->map_Kd);
         mat = mat->next;
     }
+    free(path);
     return (ptr);
 }

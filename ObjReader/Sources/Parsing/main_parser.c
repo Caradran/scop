@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/08 21:54:34 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/16 15:27:03 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/16 18:32:32 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,7 +214,7 @@ int             main_parser(t_obj *obj)
 			else
 			{
 				ptr->material = ft_strdup(skip_whitespace(&(new[6]), size));
-				ptr->material[ft_strlen(ptr->material) - 1] = 0;
+				ptr->material[ft_strlen(ptr->material)] = 0;
 			}
 		}
 		else if (new[0] == 's')
