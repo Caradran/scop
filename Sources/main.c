@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/09 20:22:02 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/16 18:20:36 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/16 18:38:25 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,34 @@ int		init_everything(t_glstruct *glstruct)
 	return (0);
 }
 
-int		runobj(t_glstruct glstruct, t_index *ret, t_camera camera, int nb_obj)
+void change_alpha(t_glstruct glstruct, t_camera camera)
+{
+	static float alpha = 0;
+	static float deltaTime = 0;
+	static float lastFrame = 0;
+	float currentFrame;
+
+	currentFrame = glfwGetTime();
+	deltaTime = currentFrame - lastFrame;
+	lastFrame = currentFrame;
+
+	if (camera.textureflag && alpha >= 0 && alpha < 1)
+		alpha += 0.01;
+	if (!camera.textureflag && alpha <= 1 && alpha > 0)
+		alpha -= 0.01;
+	if (alpha > 1)
+		alpha = 1;
+	if (alpha < 0)
+		alpha = 0;
+	glUseProgram(glstruct.shader_program);
+	if (alpha != 1 && alpha != 0)
+		printf("%f \n", alpha);
+	glUniform1f(glGetUniformLocation(glstruct.shader_program, "alpha"),(GLfloat)alpha);
+
+}
+
+
+int		runobj(t_glstruct glstruct, t_index *ret, t_camera camera, int nb_obj, t_obj *obj)
 {
 	int		i;
 	GLuint text[2];
@@ -59,6 +86,10 @@ int		runobj(t_glstruct glstruct, t_index *ret, t_camera camera, int nb_obj)
 	camera.polyflag = 0;
 	creat_camera(init_v3(0,0,-3), &camera);
 	glfwSetInputMode(glstruct.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glUseProgram(glstruct.shader_program);
+	glUniform3f(glGetUniformLocation(glstruct.shader_program, "size"), fabs(obj->min.x - obj->max.x), fabs(obj->min.y - obj->max.y), fabs(obj->min.z - obj->max.z));
+	glUseProgram(glstruct.shader_program);
+	glUniform3f(glGetUniformLocation(glstruct.shader_program, "center"), (obj->min.x + obj->max.x) / 2.0, (obj->min.y + obj->max.y) / 2.0, (obj->min.z + obj->max.z) / 2.0);
 
 	while (!glfwWindowShouldClose(glstruct.window))
 	{
@@ -71,7 +102,7 @@ int		runobj(t_glstruct glstruct, t_index *ret, t_camera camera, int nb_obj)
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, text[1]);
 
-		transformations(glstruct, &camera);
+		transformations(glstruct, &camera, obj);
 		update_camera(&glstruct, &camera);
 		glUseProgram(glstruct.shader_program);
 		glBindVertexArray(glstruct.vao);
@@ -85,7 +116,8 @@ int		runobj(t_glstruct glstruct, t_index *ret, t_camera camera, int nb_obj)
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		else
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		glDrawElements(GL_TRIANGLES, ret->face_size, GL_UNSIGNED_INT, 0);
+		change_alpha(glstruct, camera);
+		glDrawElements(GL_TRIANGLES, ret->index_size, GL_UNSIGNED_INT, 0);
 		// glDrawArrays(GL_TRIANGLES, 1, 4);
 		// update other events like input handling
 		glfwPollEvents();
@@ -173,5 +205,5 @@ int		main(int argc, char **argv)
 	printf("~~~~~~~~~~~~~~~~~~~~Init Opengl~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 	init_everything(&glstruct);
 	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-	return(runobj(glstruct, &index, camera, i + 1));
+	return(runobj(glstruct, &index, camera, i + 1, obj));
 }
