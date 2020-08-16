@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/09 20:22:02 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/16 18:38:25 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/16 18:45:38 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,6 @@ int		runobj(t_glstruct glstruct, t_index *ret, t_camera camera, int nb_obj, t_ob
 	glUniform3f(glGetUniformLocation(glstruct.shader_program, "size"), fabs(obj->min.x - obj->max.x), fabs(obj->min.y - obj->max.y), fabs(obj->min.z - obj->max.z));
 	glUseProgram(glstruct.shader_program);
 	glUniform3f(glGetUniformLocation(glstruct.shader_program, "center"), (obj->min.x + obj->max.x) / 2.0, (obj->min.y + obj->max.y) / 2.0, (obj->min.z + obj->max.z) / 2.0);
-
 	while (!glfwWindowShouldClose(glstruct.window))
 	{
 		// wipe the drawing surface clear
@@ -117,7 +116,9 @@ int		runobj(t_glstruct glstruct, t_index *ret, t_camera camera, int nb_obj, t_ob
 		else
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		change_alpha(glstruct, camera);
-		glDrawElements(GL_TRIANGLES, ret->index_size, GL_UNSIGNED_INT, 0);
+		printf("Ici ?\n");
+		glDrawElements(GL_TRIANGLES, ret->verts_size, GL_UNSIGNED_INT, 0);
+		printf("Crash\n");
 		// glDrawArrays(GL_TRIANGLES, 1, 4);
 		// update other events like input handling
 		glfwPollEvents();
