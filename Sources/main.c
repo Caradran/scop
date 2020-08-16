@@ -26,7 +26,7 @@ int		init_everything(t_glstruct *glstruct)
 
 void change_alpha(t_glstruct glstruct, t_camera camera)
 {
-	static float alpha = 0;
+	static float alpha = 1;
 	static float deltaTime = 0;
 	static float lastFrame = 0;
 	float currentFrame;
@@ -44,8 +44,8 @@ void change_alpha(t_glstruct glstruct, t_camera camera)
 	if (alpha < 0)
 		alpha = 0;
 	glUseProgram(glstruct.shader_program);
-	if (alpha != 1 && alpha != 0)
-		printf("%f \n", alpha);
+	// if (alpha != 1 && alpha != 0)
+	// 	printf("%f \n", alpha);
 	glUniform1f(glGetUniformLocation(glstruct.shader_program, "alpha"),(GLfloat)alpha);
 
 }
@@ -55,6 +55,7 @@ int		runobj(t_glstruct glstruct, t_index *ret, t_camera camera, int nb_obj, t_ob
 {
 	int		i;
 	GLuint text[2];
+	t_index *tmp;
 	
 	if (DEBUG)
 	{
@@ -64,12 +65,7 @@ int		runobj(t_glstruct glstruct, t_index *ret, t_camera camera, int nb_obj, t_ob
 		printf("OpenGL version supported %s\n", version);
 	}
 	
-	printf("~~~~~~~~~~~~~~~~Vbo_Vao_Ebo~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-	generate_vbo(&glstruct.vbo, ret->verts, sizeof(float) * ret->verts_size);
-	printf("~~~~~~~~~~~~~~~~Vbo_Vao_Ebo~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-	generate_vao(&glstruct.vao, glstruct.vbo);
-	printf("~~~~~~~~~~~~~~~~Vbo_Vao_Ebo~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-	generate_ebo(&glstruct.ebo, (float*)ret->index, (ret->face_size));
+
 	printf("~~~~~~~~~~~~~~~~Shader~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 	glstruct.shader_program = create_program();
 	printf("~~~~~~~~~~~~~~~~Texture~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
@@ -96,17 +92,13 @@ int		runobj(t_glstruct glstruct, t_index *ret, t_camera camera, int nb_obj, t_ob
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, text[0]);
+
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, text[1]);
 
-		transformations(glstruct, &camera, obj);
-		update_camera(&glstruct, &camera);
-		glUseProgram(glstruct.shader_program);
-		glBindVertexArray(glstruct.vao);
-		// draw points 0-3 from the currently bound VAO with current in-use shader
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, glstruct.ebo);
+		change_alpha(glstruct, camera);
+		
+		glfwPollEvents();
 		if (camera.mouseflag)
 			glfwSetInputMode(glstruct.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 		else
@@ -115,16 +107,28 @@ int		runobj(t_glstruct glstruct, t_index *ret, t_camera camera, int nb_obj, t_ob
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		else
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		change_alpha(glstruct, camera);
-		glDrawElements(GL_TRIANGLES, ret->verts_size, GL_UNSIGNED_INT, 0);
-		// glDrawArrays(GL_TRIANGLES, 1, 4);
-		// update other events like input handling
-		glfwPollEvents();
-		// put the stuff we've been drawing onto the display
+		
+		tmp = ret;
+		while (tmp)
+		{
+			update_camera(&glstruct, &camera);
+	        glActiveTexture(GL_TEXTURE0);
+	        glBindTexture(GL_TEXTURE_2D, text[tmp->index_txt]);
+			transformations(glstruct, &camera, obj);
+			glDeleteVertexArrays(1 , &glstruct.vao);
+			glDeleteBuffers(1, &glstruct.vbo);
+			glDeleteBuffers(1, &glstruct.ebo);
+			generate_vbo(&glstruct.vbo, tmp->verts, sizeof(float) * tmp->verts_size);
+			generate_vao(&glstruct.vao, glstruct.vbo);
+			generate_ebo(&glstruct.ebo, (float*)tmp->index, (tmp->face_size));
+			glUseProgram(glstruct.shader_program);
+			glBindVertexArray(glstruct.vao);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, glstruct.ebo);
+			glDrawElements(GL_TRIANGLES, tmp->verts_size, GL_UNSIGNED_INT, 0);
+			tmp = tmp->next;
+		}
 		glfwSwapBuffers(glstruct.window);
 	}
-	glDeleteVertexArrays(1 , &glstruct.vao);
-	glDeleteBuffers(1, &glstruct.vbo);
 	glfwTerminate();
 	// freeobj();
 	return (0);

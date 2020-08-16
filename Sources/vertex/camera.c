@@ -149,7 +149,7 @@ void mouse_callback(double xpos, double ypos, t_camera *camera)
 	xoffset *= 0.1;
 	yoffset *= 0.1;
 
-	camera->pitch += yoffset;
+	camera->pitch -= yoffset;
 	camera->yaw += xoffset;
 	camera->yaw = fmod(camera->yaw, 360);
 
