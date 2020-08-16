@@ -33,6 +33,8 @@ t_obj       *getobj(t_obj *obj)
     }
     if (save->path)
     {
+        if (((int)obj & INDEX))
+            return (save);
         tmp = save;
         while (tmp->next != NULL)
             tmp = tmp->next;

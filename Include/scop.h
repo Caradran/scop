@@ -135,7 +135,7 @@ void		generate_vao2(GLuint *vao, GLuint vbo, t_index *index, int nb);
 */
 
 void		creat_camera(t_vec3 pos,  t_camera *camera);
-void		transformations(t_glstruct glstruct, t_camera *camera);
+void		transformations(t_glstruct glstruct, t_camera *camera, t_obj *obj);
 void		update_camera(t_glstruct *glstruct, t_camera *camera);
 
 

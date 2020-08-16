@@ -23,6 +23,8 @@
 # define TRIANGLE		1 << 2
 # define REMOVE_DOUBLE	1 << 3
 # define UNINDEX		1 << 4
+# define INDEX			1 << 5
+
 
 typedef struct			s_vertex4
 {

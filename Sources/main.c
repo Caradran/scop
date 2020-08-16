@@ -24,7 +24,34 @@ int		init_everything(t_glstruct *glstruct)
 	return (0);
 }
 
-int		runobj(t_glstruct glstruct, t_index *ret, t_camera camera, int nb_obj)
+void change_alpha(t_glstruct glstruct, t_camera camera)
+{
+	static float alpha = 0;
+	static float deltaTime = 0;
+	static float lastFrame = 0;
+	float currentFrame;
+
+	currentFrame = glfwGetTime();
+	deltaTime = currentFrame - lastFrame;
+	lastFrame = currentFrame;
+
+	if (camera.textureflag && alpha >= 0 && alpha < 1)
+		alpha += 0.01;
+	if (!camera.textureflag && alpha <= 1 && alpha > 0)
+		alpha -= 0.01;
+	if (alpha > 1)
+		alpha = 1;
+	if (alpha < 0)
+		alpha = 0;
+	glUseProgram(glstruct.shader_program);
+	if (alpha != 1 && alpha != 0)
+		printf("%f \n", alpha);
+	glUniform1f(glGetUniformLocation(glstruct.shader_program, "alpha"),(GLfloat)alpha);
+
+}
+
+
+int		runobj(t_glstruct glstruct, t_index *ret, t_camera camera, int nb_obj, t_obj *obj)
 {
 	int		i;
 	GLuint text[2];
@@ -69,7 +96,7 @@ int		runobj(t_glstruct glstruct, t_index *ret, t_camera camera, int nb_obj)
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, text[1]);
 
-		transformations(glstruct, &camera);
+		transformations(glstruct, &camera, obj);
 		update_camera(&glstruct, &camera);
 		glUseProgram(glstruct.shader_program);
 		glBindVertexArray(glstruct.vao);
@@ -83,6 +110,7 @@ int		runobj(t_glstruct glstruct, t_index *ret, t_camera camera, int nb_obj)
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		else
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		change_alpha(glstruct, camera);
 		glDrawElements(GL_TRIANGLES, ret[0].index_size, GL_UNSIGNED_INT, 0);
 		// glDrawArrays(GL_TRIANGLES, 1, 4);
 		// update other events like input handling
@@ -127,6 +155,7 @@ int		main(int argc, char **argv)
         	return (objerror(obj, 1));
 	}
 	i = 0;
+	printf("adr obj %p\n", obj);
 	while (obj)
 	{
 		printf("Obj : %s\n", obj->path);
@@ -146,5 +175,5 @@ int		main(int argc, char **argv)
 	printf("~~~~~~~~~~~~~~~~~~~~Init Opengl~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 	init_everything(&glstruct);
 	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-	return(runobj(glstruct, index, camera, i + 1));
+	return(runobj(glstruct, index, camera, i + 1, obj));
 }

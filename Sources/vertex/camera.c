@@ -38,6 +38,16 @@ static t_mat4 creat_mat_camera(t_camera *camera)
 	return (mult_mat4(ret, P));
 }
 
+static t_vec3 creat_med_pos(t_vertex min, t_vertex max)
+{
+	t_vec3 med;
+
+	med.x = (float)(min.x + max.x) / 2.0;
+	med.y = (float)(min.y + max.y) / 2.0;
+	med.z = (float)(min.z + max.z) / 2.0;
+	return (med);
+}
+
 void	creat_camera(t_vec3 pos,  t_camera *camera)
 {
 
@@ -58,10 +68,10 @@ static t_mat4	model_mat(t_vec3 scale_vec, t_vec3 trans_vec, t_vec3 rot_vec, floa
 	t_mat4 ret;
 
 	ret = init_mat4();
+	ret = mult_mat4(ret, scaling_mat4(scale_vec));
 	ret = mult_mat4(ret, translation_mat4(trans_vec));
 	ret = mult_mat4(ret, rot_mat4(rot_vec, theta));
-	ret = mult_mat4(ret, translation_mat4(init_v3(-0.39 - 0.5 , -0.39 - 0.5, -0.39 - 0.5)));
-	ret = mult_mat4(ret, scaling_mat4(scale_vec));
+	ret = mult_mat4(ret, translation_mat4(scale_v3(-1, trans_vec)));
 	return (ret);
 }
 
@@ -70,8 +80,8 @@ static t_mat4 view_mat(t_vec3 scale_vec, t_vec3 trans_vec, t_vec3 rot_vec, float
 	t_mat4 ret;
 
 	ret = init_mat4();
-	ret = mult_mat4(ret, rot_mat4(rot_vec, theta));
 	ret = mult_mat4(ret, scaling_mat4(scale_vec));
+	ret = mult_mat4(ret, rot_mat4(rot_vec, theta));
 	ret = mult_mat4(ret, translation_mat4(trans_vec));
 	return (ret);
 }
@@ -90,11 +100,13 @@ static t_mat4 proj_mat(float fov, float far, float near)
 	return (ret);
 }
 
-void	transformations(t_glstruct glstruct, t_camera *camera)
+void	transformations(t_glstruct glstruct, t_camera *camera, t_obj *obj)
 {
 	static float deltaTime = 0;
 	static float lastFrame = 0;
 	static float rotation = 0;
+	// t_obj *obj = getobj((void*)(INDEX));
+	// printf("adr obj %p\n", obj);
 	float currentFrame;
 	t_mat4	ret;
 	float	test[16];
@@ -104,10 +116,13 @@ void	transformations(t_glstruct glstruct, t_camera *camera)
 	lastFrame = currentFrame;
 	if (camera->rotflag)
 		rotation += deltaTime;
+
+	GLint m_viewport[4];
+	glGetIntegerv( GL_VIEWPORT, m_viewport);
 	ret = proj_mat(90.0f * M_PI / 360.0, 10000.0f,  0.1f);
 	ret = mult_mat4(ret, creat_mat_camera(camera));
-	ret = mult_mat4(ret, scaling_mat4(init_v3(1, 640/480, 1)));
-	ret = mult_mat4(ret, model_mat(init_v3(3, 3, 3), init_v3(0.39, 0.39, 0.39), normalize_v3(init_v3(0, 1, 0)), (float)rotation));
+	ret = mult_mat4(ret, model_mat(init_v3(3, 3, 3), creat_med_pos(obj->min, obj->max), normalize_v3(init_v3(1, 1, 1)), (float)rotation));
+	ret = mult_mat4(ret, scaling_mat4(init_v3(1, (float)m_viewport[2]/(float)m_viewport[3], 1)));
 
 
 	// print_mat4(ret);
@@ -116,8 +131,7 @@ void	transformations(t_glstruct glstruct, t_camera *camera)
 		test[i] = (float)(mat4_to_a(ret))[i]; // Leaks
 
 	glUseProgram(glstruct.shader_program);
-	unsigned int transformLoc = glGetUniformLocation(glstruct.shader_program, "transform");
-	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, (GLfloat*)test);
+	glUniformMatrix4fv(glGetUniformLocation(glstruct.shader_program, "transform"), 1, GL_FALSE, (GLfloat*)test);
 }
 
 void mouse_callback(double xpos, double ypos, t_camera *camera)
@@ -200,5 +214,11 @@ void	update_camera(t_glstruct *glstruct, t_camera *camera)
     }
     if (!(glfwGetKey(glstruct->window, GLFW_KEY_R) == GLFW_PRESS))
     	camera->rotinputflag = 1;
-
+    if (glfwGetKey(glstruct->window, GLFW_KEY_T) == GLFW_PRESS && camera->textureinputflag)
+    {
+    	camera->textureinputflag = 0;
+        camera->textureflag = camera->textureflag ? 0 : 1;
+    }
+    if (!(glfwGetKey(glstruct->window, GLFW_KEY_T) == GLFW_PRESS))
+    	camera->textureinputflag = 1;
 }
