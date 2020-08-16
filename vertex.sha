@@ -6,7 +6,7 @@ layout ( location = 2 ) in vec3 vn;
 layout ( location = 3 ) in vec3 vp;
 
 
-out vec3 our_color;
+flat out vec3 our_color;
 out vec3 UV;
 
 uniform mat4 transform;
