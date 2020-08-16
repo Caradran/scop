@@ -10,15 +10,17 @@ flat out vec3 our_color;
 out vec3 UV;
 
 uniform mat4 transform;
+uniform vec3 size;
+uniform vec3 center;
 
 void main()
 {
 	gl_Position = v * transform;
+//	float level;
+//	if (gl_VertexID % 2 == 1)
+//		level = (gl_VertexID % 8) * 0.125;
+//	else
+//		level = 1 - ((gl_VertexID % 8) * 0.125);
+	our_color = vec3(((v.x - center.x)  / size[0] + 0.5f), ((v.y - center.y) / size.y + 0.5f), ((v.z - center.z) / size.z + 0.5f));
 	UV = vec3(vt);
-	float level;
-	if (gl_VertexID % 2 == 1)
-		level = (gl_VertexID % 8) * 0.125;
-	else
-		level = 1 - ((gl_VertexID % 8) * 0.125);
-	our_color = vec3(level, level, level);
 }

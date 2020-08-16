@@ -1,6 +1,6 @@
 #version 400
 
-in vec3 our_color;
+flat in vec3 our_color;
 in vec3 UV;
 
 out vec4 frag_color;

@@ -84,6 +84,10 @@ int		runobj(t_glstruct glstruct, t_index *ret, t_camera camera, int nb_obj, t_ob
 	camera.polyflag = 0;
 	creat_camera(init_v3(0,0,-3), &camera);
 	glfwSetInputMode(glstruct.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glUseProgram(glstruct.shader_program);
+	glUniform3f(glGetUniformLocation(glstruct.shader_program, "size"), fabs(obj->min.x - obj->max.x), fabs(obj->min.y - obj->max.y), fabs(obj->min.z - obj->max.z));
+	glUseProgram(glstruct.shader_program);
+	glUniform3f(glGetUniformLocation(glstruct.shader_program, "center"), (obj->min.x + obj->max.x) / 2.0, (obj->min.y + obj->max.y) / 2.0, (obj->min.z + obj->max.z) / 2.0);
 
 	while (!glfwWindowShouldClose(glstruct.window))
 	{
