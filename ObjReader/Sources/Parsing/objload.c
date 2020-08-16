@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/08 21:27:23 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/15 14:23:27 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/16 15:41:07 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,5 +58,10 @@ int         objload(char *path, int flag)
     if (obj->flag & REMOVE_DOUBLE)
         if ((error = remove_double(obj)))
             return (error);
+    if (obj->mtlib)
+    {
+        ft_strstr(path, ".obj")[0] = '\0';
+        obj->mtl = mtlparser(ft_strjoin(path,".mtl"));
+    }
     return (0);
 }

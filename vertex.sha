@@ -20,5 +20,6 @@ void main()
 
 	level = (gl_VertexID % 16) * 0.0625;
 	our_color = vec3(((v.x - center.x)  / size.x + 0.5f) * 0.5f + level * 0.5f, ((v.y - center.y) / size.y + level * 0.5f) * 0.5f + level * 0.5f, ((v.z - center.z) / size.z + 0.5f) * 0.5f + level * 0.5f);
+
 	UV = vec3(vt);
 }

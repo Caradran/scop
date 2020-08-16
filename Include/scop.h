@@ -73,14 +73,16 @@ typedef struct	s_f
 	int			*vn;
 }				t_f;
 
-typedef struct	s_index
+typedef struct		s_index
 {
-	float		*verts;
-	int			*index;
-	int			*index_txt;
-	int			index_size;
-	int			size;
-}				t_index;
+	float			*verts;
+	int				*index;
+	int				index_obj;
+	int				index_txt;
+	int				face_size;
+	int				verts_size;
+	struct s_index	*next;
+}					t_index;
 
 /*
 *	Init functions for t_obj structs in it.
@@ -143,9 +145,9 @@ void		update_camera(t_glstruct *glstruct, t_camera *camera);
 *	Vertex
 */
 
-t_index		create_vert(t_obj obj, int *index, int size, int *txt);
+int			create_vert(t_obj obj, t_index **ret, int *index, int size, t_group *ptr_grp);
 void		set_max_vs(t_obj	*obj);
-int			*split_faces(t_obj *obj, int *size, t_index *ret);
+int			split_faces(t_obj *obj, t_index *ret, t_group *ptr_grp);
 
 /*
 *	Verbose debuging functions.
