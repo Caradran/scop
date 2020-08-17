@@ -86,6 +86,15 @@ int		runobj(t_glstruct glstruct, t_index *ret, t_camera camera, int nb_obj, t_ob
 	glUniform3f(glGetUniformLocation(glstruct.shader_program, "size"), fabs(obj->min.x - obj->max.x), fabs(obj->min.y - obj->max.y), fabs(obj->min.z - obj->max.z));
 	glUseProgram(glstruct.shader_program);
 	glUniform3f(glGetUniformLocation(glstruct.shader_program, "center"), (obj->min.x + obj->max.x) / 2.0, (obj->min.y + obj->max.y) / 2.0, (obj->min.z + obj->max.z) / 2.0);
+
+	tmp = ret;
+	while (tmp)
+	{
+		generate_vbo(&tmp->vbo, tmp->verts, sizeof(float) * tmp->verts_size);
+		generate_vao(&tmp->vao, tmp->vbo);
+		generate_ebo(&tmp->ebo, (float*)tmp->index, (tmp->face_size));
+		tmp = tmp->next;
+	}
 	while (!glfwWindowShouldClose(glstruct.window))
 	{
 		// wipe the drawing surface clear
@@ -113,23 +122,21 @@ int		runobj(t_glstruct glstruct, t_index *ret, t_camera camera, int nb_obj, t_ob
 		{
 			update_camera(&glstruct, &camera);
 	        glActiveTexture(GL_TEXTURE0);
-	        glBindTexture(GL_TEXTURE_2D, text[tmp->index_txt]);
+	        glBindTexture(GL_TEXTURE_2D, text[0]);
 			transformations(glstruct, &camera, obj);
-			glDeleteVertexArrays(1 , &glstruct.vao);
-			glDeleteBuffers(1, &glstruct.vbo);
-			glDeleteBuffers(1, &glstruct.ebo);
-			generate_vbo(&glstruct.vbo, tmp->verts, sizeof(float) * tmp->verts_size);
-			generate_vao(&glstruct.vao, glstruct.vbo);
-			generate_ebo(&glstruct.ebo, (float*)tmp->index, (tmp->face_size));
 			glUseProgram(glstruct.shader_program);
-			glBindVertexArray(glstruct.vao);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, glstruct.ebo);
+			glBindVertexArray(tmp->vao);
+
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, tmp->ebo);
 			glDrawElements(GL_TRIANGLES, tmp->verts_size, GL_UNSIGNED_INT, 0);
 			tmp = tmp->next;
 		}
 		glfwSwapBuffers(glstruct.window);
 	}
 	glfwTerminate();
+/*			glDeleteVertexArrays(1 , &glstruct.vao);
+			glDeleteBuffers(1, &glstruct.vbo);
+			glDeleteBuffers(1, &glstruct.ebo);*/ //free all that for all t_indexes
 	// freeobj();
 	return (0);
 }
@@ -193,6 +200,7 @@ int		main(int argc, char **argv)
 				if (!(ptr->next = malloc(sizeof(t_index))))
 					return (1);
 				ptr = ptr->next;
+				ptr->next = NULL;
 			}
 			ptr_grp = ptr_grp->next;
 		}
@@ -201,6 +209,8 @@ int		main(int argc, char **argv)
 			if (!(ptr->next = malloc(sizeof(t_index))))
 				return (1);
 			ptr = ptr->next;
+			ptr->next = NULL;
+
 		}
 		obj = obj->next;
 		++i;

@@ -16,9 +16,6 @@
 typedef struct	s_glstruct
 {
 	GLFWwindow	*window;
-	GLuint		vbo;
-	GLuint		vao;
-	GLuint		ebo;
 	GLuint		shader_program;
 }				t_glstruct;
 
@@ -81,6 +78,9 @@ typedef struct		s_index
 	int				index_txt;
 	int				face_size;
 	int				verts_size;
+	GLuint			vbo;
+	GLuint			vao;
+	GLuint			ebo;
 	struct s_index	*next;
 }					t_index;
 
