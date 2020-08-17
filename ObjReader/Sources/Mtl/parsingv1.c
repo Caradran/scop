@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/16 14:46:55 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/16 15:38:46 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/17 18:58:51 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 void					name(char *line, t_material *ptr)
 {
+    int i;
+
     if (ptr->name)
     {
         ptr->next = malloc(sizeof(t_material));
@@ -22,9 +24,24 @@ void					name(char *line, t_material *ptr)
         ptr->next->map_Kd = NULL;
         ptr->next->id = ptr->id + 1;
         ptr->next->name = ft_strdup(&(line[7]));
+        i = ft_strlen(ptr->name) - 1;
+        while (i > 0 && ptr->name[i] == '\r')
+        {
+            ptr->name[i] = 0;
+            i--;
+        }
     }
     else
+    {
         ptr->name = ft_strdup(&(line[7]));
+        i = ft_strlen(ptr->name) - 1;
+        while (i > 0 && ptr->name[i] == '\r')
+        {
+            ptr->name[i] = 0;
+            i--;
+        }
+    }
+    
 }
 
 void					Ns(char *line, t_material *ptr)

@@ -121,7 +121,7 @@ int			check_error_obj(t_obj *obj);
 */
 
 
-int			setup_texture(t_glstruct *glstruct, GLuint *textureID);
+int			setup_texture(t_glstruct *glstruct, GLuint *textureID, char *path, char *base);
 GLuint		ft_shader(char *name, GLenum shader_type);
 GLuint		create_program(void);
 void		generate_vbo(GLuint *vbo, float points[], int len);

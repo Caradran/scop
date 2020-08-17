@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/09 20:22:02 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/16 18:55:49 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/17 19:08:36 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void change_alpha(t_glstruct glstruct, t_camera camera)
 int		runobj(t_glstruct glstruct, t_index *ret, t_camera camera, int nb_obj, t_obj *obj)
 {
 	int		i;
-	GLuint text[2];
+	GLuint text[34];
 	t_index *tmp;
 	
 	if (DEBUG)
@@ -68,11 +68,29 @@ int		runobj(t_glstruct glstruct, t_index *ret, t_camera camera, int nb_obj, t_ob
 
 	printf("~~~~~~~~~~~~~~~~Shader~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 	glstruct.shader_program = create_program();
+	glUseProgram(glstruct.shader_program);
 	printf("~~~~~~~~~~~~~~~~Texture~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-	if (!setup_texture(&glstruct, text))
+	t_material *mtl;
+
+	mtl = obj->mtl;
+	while (mtl)
 	{
-		ft_putendl("Error Mallocated TGA file\n");
-		return (-1);
+		if (!setup_texture(&glstruct, text, mtl->map_Kd, obj->path))
+		{
+			ft_putendl("Error Mallocated TGA file\n");
+			return (-1);
+		}
+		mtl = mtl->next;
+	}
+	int louis;
+	tmp = ret;
+	louis = 0;
+	while (tmp)
+	{
+		tmp->index_txt = louis;
+		louis++;
+		printf("Index-> %d\n", tmp->index_txt);
+		tmp = tmp->next;
 	}
 	printf("~~~~~~~~~~~~~~~~LOOP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 	
@@ -100,10 +118,6 @@ int		runobj(t_glstruct glstruct, t_index *ret, t_camera camera, int nb_obj, t_ob
 		// wipe the drawing surface clear
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		
-
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, text[1]);
 
 		change_alpha(glstruct, camera);
 		
@@ -121,8 +135,9 @@ int		runobj(t_glstruct glstruct, t_index *ret, t_camera camera, int nb_obj, t_ob
 		while (tmp)
 		{
 			update_camera(&glstruct, &camera);
-	        glActiveTexture(GL_TEXTURE0);
-	        glBindTexture(GL_TEXTURE_2D, text[0]);
+			glUniform1i(glGetUniformLocation(glstruct.shader_program, "texture1"), tmp->index_txt);
+	        glBindTexture(GL_TEXTURE_2D, text[tmp->index_txt]);
+	        glActiveTexture(GL_TEXTURE0 + tmp->index_txt);
 			transformations(glstruct, &camera, obj);
 			glUseProgram(glstruct.shader_program);
 			glBindVertexArray(tmp->vao);
@@ -139,6 +154,29 @@ int		runobj(t_glstruct glstruct, t_index *ret, t_camera camera, int nb_obj, t_ob
 			glDeleteBuffers(1, &glstruct.ebo);*/ //free all that for all t_indexes
 	// freeobj();
 	return (0);
+}
+
+void		find_index_material(t_group **group, t_material *mat, int *ret)
+{
+	int	i = 0;
+	t_material *tmp;
+
+	ret = 0;
+	tmp = mat;
+	while (tmp)
+	{
+		if ((*group)->material && mat->map_Kd)
+		{
+			printf("Material (group) \t: [%s]\n", (*group)->material);
+			if (!ft_strcmp((*group)->material, tmp->name))
+			{
+				*ret = i;
+				break ;
+			}
+		}
+		i++;
+		tmp = tmp->next;
+	}
 }
 
 int		main(int argc, char **argv)
@@ -176,11 +214,13 @@ int		main(int argc, char **argv)
 	t_group *ptr_grp;
 	t_obj *tmp_obj;
 	tmp_obj = obj;
+	int louis;
 	i = 0;
 	index.next = NULL;
 	ptr = &index;
 	while (obj)
 	{
+	louis = 0;
 		ptr->index_obj = obj->id;
 		ptr_grp = obj->group;
 		while (ptr_grp)
@@ -194,7 +234,11 @@ int		main(int argc, char **argv)
 			if (create_vert(*obj, &(ptr), tmp.index, tmp.face_size * 3, ptr_grp))
 				return (1);
 			free(tmp.index);
+			ptr->index_txt = louis / 2;
+			louis++;
 			printf("~~~~~~~~~~~~~~~~~~~~Vertex Done~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+			// if (ptr_grp && obj->mtl)
+			// 	find_index_material(&ptr_grp, obj->mtl, &tmp.index_txt);
 			if (ptr_grp->next)
 			{
 				if (!(ptr->next = malloc(sizeof(t_index))))

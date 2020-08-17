@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/16 15:08:27 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/16 15:35:39 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/17 17:10:57 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,16 @@ void					illum(char *line, t_material *ptr)
     ptr->illum = atoi(&(line[6])); // Atoi
 }
 
+#include <stdio.h>
 void					map_Kd(char *line, t_material *ptr)
 {
+    int i = 0;
+
     ptr->map_Kd = ft_strdup(&(line[7]));
+    i = ft_strlen(ptr->map_Kd) - 1;
+    while (i > 0 && ptr->map_Kd[i] == '\r')
+    {
+        ptr->map_Kd[i] = 0;
+        i--;
+    }
 }
