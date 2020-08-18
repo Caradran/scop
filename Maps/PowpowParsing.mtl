@@ -10,7 +10,7 @@ Ke 0.0 0.0 0.0
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd C:\\Users\\Masse\\Desktop\\AK.png
+map_Kd CannonTxt.tga
 
 newmtl OreilleTxt
 Ns 225.000000
@@ -21,7 +21,7 @@ Ke 0.0 0.0 0.0
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd C:\\Users\\Masse\\Desktop\\oreille.PNG
+map_Kd OreilleTxt.tga
 
 newmtl PoignerTxt
 Ns 900.000000
@@ -32,4 +32,4 @@ Ke 0.0 0.0 0.0
 Ni 0.000000
 d 0.000000
 illum 1
-map_Kd C:\\Users\\Masse\\Desktop\\powpow.PNG
+map_Kd PoignerTxt.tga

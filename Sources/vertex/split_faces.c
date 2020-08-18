@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/08 17:54:11 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/16 18:30:42 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/18 19:05:31 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int				split_faces(t_obj *obj, t_index *ret, t_group *ptr_grp)
 	size_malloc = 0;
 	i = -1;
 	while (++i < ptr_grp->size_face[0])
-		size_malloc += ptr_grp->face[i].size - 2;;
+		size_malloc += (ptr_grp->face[i].size - 2) * 3;
 	if (!(ret->index = ft_memalloc(size_malloc * 9 * sizeof(int))))
 		return (1);
 	ret->face_size = size_malloc / 3;

@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/08 21:54:34 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/16 18:49:42 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/18 19:02:59 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,8 +106,9 @@ int			init_newgroup(t_group *ptr)
 {
 	ptr->material = NULL;
 	ptr->size_face[0] = 0;
-	ptr->size_face[1] = 64;
-	if (!(ptr->face = malloc(sizeof(t_face) * 64)))
+	ptr->size_face[1] = 4;
+	ptr->next = NULL;
+	if (!(ptr->face = malloc(sizeof(t_face) * 4)))
 		return (1);
 	return (0);
 }
@@ -119,7 +120,7 @@ int             main_parser(t_obj *obj)
 	int     error;
 
 	fd = open(obj->path, O_RDONLY);
-	if (fd == -1)
+	if (fd <= -1)
 		return (objerror(obj, 2));
 	if (init_v_malloc(obj))
 		return (objerror(obj, 1));
@@ -162,7 +163,8 @@ int             main_parser(t_obj *obj)
 	char    *tmp;
 	char    *line;
 	t_group	*ptr;
-
+	int		i;
+	
 	ptr = obj->group;
 	ptr->material = NULL;
 	line = file;
@@ -203,19 +205,40 @@ int             main_parser(t_obj *obj)
 				ptr = ptr->next;
 				if ((error = init_newgroup(ptr)))
 					return (objerror(obj, 1));
-				printf("New group Create\n");
 			}
 		}
-		else if (new[0] == 'm' || new[0] == 'u')
+		else if (new[0] == 'm')
 		{
 			int size;
 			size = ft_strlen(&(new[6]));
-			if (new[0] == 'm')
-				obj->mtlib = ft_strndup(skip_whitespace(&(new[6]), size), size);
-			else
+			obj->mtlib = ft_strndup(skip_whitespace(&(new[6]), size), size);
+			i = ft_strlen(obj->mtlib) - 1;
+			while (i > 0 && obj->mtlib[i] == '\r')
 			{
-				ptr->material = ft_strdup(skip_whitespace(&(new[6]), size));
-				ptr->material[ft_strlen(ptr->material)] = 0;
+				obj->mtlib[i] = 0;
+				i--;
+			}
+		}
+		else if (new[0] == 'u')
+		{
+			int size;
+			size = ft_strlen(&(new[6]));
+			if (ptr->size_face[0] > 0)
+			{
+				if (!(ptr->next = malloc(sizeof(t_group))))
+					return (objerror(obj, 1));
+				ptr = ptr->next;
+				ptr->path = NULL;
+				if ((error = init_newgroup(ptr)))
+					return (objerror(obj, 1));
+			}
+			ptr->material = ft_strdup(skip_whitespace(&(new[6]), size));
+			ptr->material[ft_strlen(ptr->material)] = 0;
+			i = ft_strlen(ptr->material) - 1;
+			while (i > 0 && ptr->material[i] == '\r')
+			{
+				ptr->material[i] = 0;
+				i--;
 			}
 		}
 		else if (new[0] == 's')

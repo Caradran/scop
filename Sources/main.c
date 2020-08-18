@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/09 20:22:02 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/17 19:08:36 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/18 19:06:33 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,24 +73,31 @@ int		runobj(t_glstruct glstruct, t_index *ret, t_camera camera, int nb_obj, t_ob
 	t_material *mtl;
 
 	mtl = obj->mtl;
-	while (mtl)
+	if (mtl)
 	{
-		if (!setup_texture(&glstruct, text, mtl->map_Kd, obj->path))
+		while (mtl)
+		{
+			if (!setup_texture(&glstruct, text, mtl->map_Kd, obj->path))
+			{
+				ft_putendl("Error Mallocated TGA file\n");
+				return (-1);
+			}
+			mtl = mtl->next;
+		}
+	}
+	else
+	{
+		if (!setup_texture(&glstruct, text, "Jinx.tga", "\0"))
 		{
 			ft_putendl("Error Mallocated TGA file\n");
 			return (-1);
 		}
-		mtl = mtl->next;
-	}
-	int louis;
-	tmp = ret;
-	louis = 0;
-	while (tmp)
-	{
-		tmp->index_txt = louis;
-		louis++;
-		printf("Index-> %d\n", tmp->index_txt);
-		tmp = tmp->next;
+		tmp = ret;
+		while(tmp)
+		{
+			tmp->index_txt = 0;
+			tmp = tmp->next;
+		}
 	}
 	printf("~~~~~~~~~~~~~~~~LOOP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 	
@@ -98,6 +105,7 @@ int		runobj(t_glstruct glstruct, t_index *ret, t_camera camera, int nb_obj, t_ob
 	camera.pitch = 0;
 	camera.mouseflag = 1;
 	camera.polyflag = 0;
+	camera.speed_base = 10.0;
 	creat_camera(init_v3(0,0,-3), &camera);
 	glfwSetInputMode(glstruct.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glUseProgram(glstruct.shader_program);
@@ -130,21 +138,23 @@ int		runobj(t_glstruct glstruct, t_index *ret, t_camera camera, int nb_obj, t_ob
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		else
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		
+		int k;
 		tmp = ret;
+		k = 0;
 		while (tmp)
 		{
 			update_camera(&glstruct, &camera);
-			glUniform1i(glGetUniformLocation(glstruct.shader_program, "texture1"), tmp->index_txt);
-	        glBindTexture(GL_TEXTURE_2D, text[tmp->index_txt]);
 	        glActiveTexture(GL_TEXTURE0 + tmp->index_txt);
-			transformations(glstruct, &camera, obj);
+	        glBindTexture(GL_TEXTURE_2D, text[tmp->index_txt]);
+			glUniform1i(glGetUniformLocation(glstruct.shader_program, "texture1"), tmp->index_txt);
 			glUseProgram(glstruct.shader_program);
+			transformations(glstruct, &camera, obj);
 			glBindVertexArray(tmp->vao);
 
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, tmp->ebo);
 			glDrawElements(GL_TRIANGLES, tmp->verts_size, GL_UNSIGNED_INT, 0);
 			tmp = tmp->next;
+			k++;
 		}
 		glfwSwapBuffers(glstruct.window);
 	}
@@ -161,17 +171,17 @@ void		find_index_material(t_group **group, t_material *mat, int *ret)
 	int	i = 0;
 	t_material *tmp;
 
-	ret = 0;
+	*ret = 0;
 	tmp = mat;
 	while (tmp)
 	{
-		if ((*group)->material && mat->map_Kd)
+		if ((*group)->material && tmp->name)
 		{
-			printf("Material (group) \t: [%s]\n", (*group)->material);
 			if (!ft_strcmp((*group)->material, tmp->name))
 			{
+				printf("[%s] == [%s]\nTexture Find : %d\n", (*group)->material, tmp->name, i);
 				*ret = i;
-				break ;
+				return ;
 			}
 		}
 		i++;
@@ -214,31 +224,38 @@ int		main(int argc, char **argv)
 	t_group *ptr_grp;
 	t_obj *tmp_obj;
 	tmp_obj = obj;
-	int louis;
 	i = 0;
+	int savetxt;
+
+	savetxt = 0;
 	index.next = NULL;
 	ptr = &index;
 	while (obj)
 	{
-	louis = 0;
 		ptr->index_obj = obj->id;
 		ptr_grp = obj->group;
 		while (ptr_grp)
 		{
-			printf("~~~~~~~~~~~~~~~~~~~~Splits~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+			// printf("~~~~~~~~~~~~~~~~~~~~Splits~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 
 			if (split_faces(obj, &(tmp), ptr_grp))
 				return (1);
-			printf("~~~~~~~~~~~~~~~~~~~~Vertex~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+			// printf("~~~~~~~~~~~~~~~~~~~~Vertex~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 
 			if (create_vert(*obj, &(ptr), tmp.index, tmp.face_size * 3, ptr_grp))
 				return (1);
 			free(tmp.index);
-			ptr->index_txt = louis / 2;
-			louis++;
-			printf("~~~~~~~~~~~~~~~~~~~~Vertex Done~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-			// if (ptr_grp && obj->mtl)
-			// 	find_index_material(&ptr_grp, obj->mtl, &tmp.index_txt);
+			// printf("~~~~~~~~~~~~~~~~~~~~Vertex Done~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+			if (ptr_grp && obj->mtl)
+			{
+				find_index_material(&ptr_grp, obj->mtl, &tmp.index_txt);
+				savetxt = tmp.index_txt;
+			}
+			else if (ptr_grp)
+			{
+				tmp.index_txt = savetxt;
+				printf("Save txt !");
+			}
 			if (ptr_grp->next)
 			{
 				if (!(ptr->next = malloc(sizeof(t_index))))

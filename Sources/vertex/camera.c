@@ -6,7 +6,7 @@
 /*   By: lomasse <lomasse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/09 20:21:07 by lomasse           #+#    #+#             */
-/*   Updated: 2020/08/13 14:13:42 by lomasse          ###   ########.fr       */
+/*   Updated: 2020/08/18 19:08:34 by lomasse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,9 +119,9 @@ void	transformations(t_glstruct glstruct, t_camera *camera, t_obj *obj)
 
 	GLint m_viewport[4];
 	glGetIntegerv( GL_VIEWPORT, m_viewport);
-	ret = proj_mat(90.0f * M_PI / 360.0, 10000.0f,  0.1f);
+	ret = proj_mat(90.0f * M_PI / 360.0, 100000.0f,  0.1f);
 	ret = mult_mat4(ret, creat_mat_camera(camera));
-	ret = mult_mat4(ret, model_mat(init_v3(3, 3, 3), creat_med_pos(obj->min, obj->max), normalize_v3(init_v3(1, 1, 1)), (float)rotation));
+	ret = mult_mat4(ret, model_mat(init_v3(3, 3, 3), creat_med_pos(obj->min, obj->max), normalize_v3(init_v3(1, 0, 0)), /*(float)rotation*/ -90 * M_PI / 180.0));
 	ret = mult_mat4(ret, scaling_mat4(init_v3(1, (float)m_viewport[2]/(float)m_viewport[3], 1)));
 
 
@@ -178,11 +178,13 @@ void	update_camera(t_glstruct *glstruct, t_camera *camera)
 		glfwGetCursorPos(glstruct->window, &xpos, &ypos);
 		mouse_callback(xpos, ypos, camera);
     }
-    camera->speed = 100.50f * deltaTime;
+    camera->speed = camera->speed_base * deltaTime;
     if (glfwGetKey(glstruct->window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		exit (0);
     if (glfwGetKey(glstruct->window, GLFW_KEY_W) == GLFW_PRESS)
        camera->pos = add_v3(camera->pos, scale_v3(camera->speed, camera->front));
+    if (glfwGetKey(glstruct->window, GLFW_KEY_KP_ADD) == GLFW_PRESS)
+       camera->speed_base *= 1.00001;
     if (glfwGetKey(glstruct->window, GLFW_KEY_S) == GLFW_PRESS)
         camera->pos = sub_v3(camera->pos, scale_v3(camera->speed, camera->front));
     if (glfwGetKey(glstruct->window, GLFW_KEY_A) == GLFW_PRESS)
