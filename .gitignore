@@ -7,4 +7,5 @@ libft/objs/*.o
 *.tmp
 .vscode
 *.a.*
-.swp
+*.swp
+.DS_Store

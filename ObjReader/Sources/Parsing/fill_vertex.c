@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../Includes/ObjReader.h"
+#include <math.h>
 
 int         find_next(char *line, int i)
 {
@@ -101,6 +102,18 @@ static float		ft_atof2(const char *nptr)
 	return ((float)nbr);
 }
 
+static float       find_pow(char *line, int i)
+{
+    while (line[i] && (ft_isdigit(line[i]) || line[i] == '.') && line[i] != '\n')
+        i++;
+    if (line[i] == 'e')
+    {
+        i++;
+        printf("e = %lf\n", atof(&line[i]));
+        return(pow(10, atof(&line[i])));
+    }
+    return (1);
+}
 
 static int         str_tov4(t_vertex4 *dest, char *line)
 {
@@ -111,19 +124,26 @@ static int         str_tov4(t_vertex4 *dest, char *line)
     if (!line[i])
         return (1);
     dest->x = atof(&(line[i]));
+    // printf("%f\n", dest->x);
+    // dest->x *= find_pow(line, i);
+    // printf("%f\n", dest->x);
     i = find_next(line, i);
     if (!line[i])
         return (1);
     dest->y = atof(&(line[i]));
+    // dest->y *= find_pow(line, i);
     i = find_next(line, i);
     if (!line[i])
         return (1);
     dest->z = atof(&(line[i])); // Attention atof not ft_atof
+    // dest->z *= find_pow(line, i);
     i = find_next(line, i);
     if (!line[i])
         dest->w = 1;
     else
-        dest->w = atof(&(line[i]));
+        dest->w = 1;
+
+    printf("%f %f %f %f\n", dest->x, dest->y, dest->z, dest->w);
     return (0);
 }
 
