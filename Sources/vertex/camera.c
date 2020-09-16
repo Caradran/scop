@@ -184,7 +184,7 @@ void	update_camera(t_glstruct *glstruct, t_camera *camera)
     if (glfwGetKey(glstruct->window, GLFW_KEY_W) == GLFW_PRESS)
        camera->pos = add_v3(camera->pos, scale_v3(camera->speed, camera->front));
     if (glfwGetKey(glstruct->window, GLFW_KEY_KP_ADD) == GLFW_PRESS)
-       camera->speed_base *= 1.00001;
+       camera->speed_base *= 1.001;
     if (glfwGetKey(glstruct->window, GLFW_KEY_S) == GLFW_PRESS)
         camera->pos = sub_v3(camera->pos, scale_v3(camera->speed, camera->front));
     if (glfwGetKey(glstruct->window, GLFW_KEY_A) == GLFW_PRESS)

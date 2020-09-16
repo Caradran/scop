@@ -92,7 +92,7 @@ int				create_vert(t_obj obj, t_index **ret, int *index, int size, t_group *ptr_
     while (++i < size * 3)
     {
         fill_tmp(&tmp, index, &obj, i * 3);
-		if (obj.size_face[0] > (long int)100000 || (find = find_point((*ret)->verts, tmp, max)) == -1)
+		if (obj.size_face[0] > (long int)20000 || (find = find_point((*ret)->verts, tmp, max)) == -1)
         {
             ft_memcpy(&((*ret)->verts[max * 13]), tmp, 13 * sizeof(float));
             find = max;

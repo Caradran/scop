@@ -40,11 +40,9 @@ static int		*fill_ret(int	*ret, t_obj *obj, int *i, t_group *ptr_grp)
 {
 	int		index;
 	int		group;
-	int		save;
 
 	*i = 0;
 	group = 0;
-	save = 0;
 	index = -1;
 	while (++index < ptr_grp->size_face[0])
 	{
