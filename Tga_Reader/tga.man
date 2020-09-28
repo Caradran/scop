@@ -154,5 +154,5 @@ int		main(int argc, char **argv)
 .SH AUTHOR
 .nf
 Jsauron - 2019 - jsauron@student.42.fr
-Lomasse - 2019 - lomasse@student.42.fr
+esuits  - 2019 - esuits@student.42.fr
 .fi
