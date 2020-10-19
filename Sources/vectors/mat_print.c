@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   vec_spe_mat.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: esuits <esuits@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/04/24 17:56:38 by esuits            #+#    #+#             */
+/*   Updated: 2020/08/08 18:20:32 by esuits           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../Include/vectors.h"
 
 void	print_mat3(t_mat3 a)
@@ -5,7 +17,6 @@ void	print_mat3(t_mat3 a)
 	int			i;
 	int			j;
 	int			k;
-
 
 	printf("mat 3 :\n");
 	i = -1;
@@ -25,7 +36,6 @@ void	print_mat4(t_mat4 a)
 	int			i;
 	int			j;
 	int			k;
-
 
 	printf("mat 4 :\n");
 	i = -1;

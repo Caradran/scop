@@ -31,7 +31,7 @@ t_vec3	mult_vec3(t_vec3 a, t_vec3 b)
 	return (c);
 }
 
-t_vec4 mult_vec4(t_vec4 a, t_vec4 b)
+t_vec4	mult_vec4(t_vec4 a, t_vec4 b)
 {
 	t_vec4 c;
 

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   vec_spe_mat.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: esuits <esuits@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/04/24 17:56:38 by esuits            #+#    #+#             */
+/*   Updated: 2020/08/08 18:20:32 by esuits           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../Include/vectors.h"
 
 t_mat	init_mat(int w, int h)
@@ -18,7 +30,7 @@ t_mat	init_mat(int w, int h)
 	return (mat);
 }
 
-t_mat3 init_mat3(void)
+t_mat3	init_mat3(void)
 {
 	int			i;
 	int			j;
@@ -31,7 +43,7 @@ t_mat3 init_mat3(void)
 	return (c);
 }
 
-t_mat4 init_mat4(void)
+t_mat4	init_mat4(void)
 {
 	int			i;
 	int			j;

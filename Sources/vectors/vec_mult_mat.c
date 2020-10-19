@@ -12,13 +12,11 @@
 
 #include "../../Include/vectors.h"
 
-
-
 t_vec2	mult_mat_v2(t_vec2 b, t_mat a)
 {
 	int		i;
 	int		j;
-	t_vec2 c;
+	t_vec2	c;
 
 	c = init_v2(0, 0);
 	if (a.w != 2 || a.h != 2)
@@ -35,7 +33,7 @@ t_vec3	mult_mat_v3(t_vec3 b, t_mat a)
 {
 	int		i;
 	int		j;
-	t_vec3 c;
+	t_vec3	c;
 
 	c = init_v3(0, 0, 0);
 	if (a.w != 3 || a.h != 3)
@@ -53,7 +51,7 @@ t_vec3	mult_mat3_v3(t_vec3 b, t_mat3 a)
 {
 	int		i;
 	int		j;
-	t_vec3 c;
+	t_vec3	c;
 
 	c = init_v3(0, 0, 0);
 	while (++j < 3)
@@ -69,7 +67,7 @@ t_vec4	mult_mat_v4(t_vec4 b, t_mat a)
 {
 	int		i;
 	int		j;
-	t_vec4 c;
+	t_vec4	c;
 
 	c = init_v4(0, 0, 0, 0);
 	if (a.w != 4 || a.h != 4)
@@ -88,7 +86,7 @@ t_vec4	mult_mat4_v4(t_vec4 b, t_mat4 a)
 {
 	int		i;
 	int		j;
-	t_vec4 c;
+	t_vec4	c;
 
 	c = init_v4(0, 0, 0, 0);
 	while (++j < 4)

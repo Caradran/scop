@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   vec_spe_mat.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: esuits <esuits@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/04/24 17:56:38 by esuits            #+#    #+#             */
+/*   Updated: 2020/08/08 18:20:32 by esuits           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../Include/vectors.h"
 
 double	dot_vec2(t_vec2 a, t_vec2 b)
 {
-	double c;
+	double	c;
 
 	c = 0;
 	c += a.x * b.x;
@@ -12,7 +24,7 @@ double	dot_vec2(t_vec2 a, t_vec2 b)
 
 double	dot_vec3(t_vec3 a, t_vec3 b)
 {
-	double c;
+	double	c;
 
 	c = 0;
 	c += a.x * b.x;
@@ -21,9 +33,9 @@ double	dot_vec3(t_vec3 a, t_vec3 b)
 	return (c);
 }
 
-double dot_vec4(t_vec4 a, t_vec4 b)
+double	dot_vec4(t_vec4 a, t_vec4 b)
 {
-	double c;
+	double	c;
 
 	c = 0;
 	c += a.x * b.x;
@@ -45,10 +57,10 @@ double	vec_dot(t_vec a, t_vec b)
 	return (c);
 }
 
-t_vec3 cross_vec3(t_vec3 a, t_vec3 b)
+t_vec3	cross_vec3(t_vec3 a, t_vec3 b)
 {
 	t_vec3 c;
-	
+
 	c.x = a.y * b.z - a.z * b.y;
 	c.y = a.z * b.x - a.x * b.z;
 	c.z = a.x * b.y - a.y * b.x;

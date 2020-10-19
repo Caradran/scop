@@ -35,10 +35,10 @@ t_mat	init_id_mat(int w)
 
 t_mat	rot_mat(t_vec3 v, double theta)
 {
-	t_mat rot;
-	double c;
-	double mc;
-	double s;
+	t_mat	rot;
+	double	c;
+	double	mc;
+	double	s;
 
 	if ((rot = init_mat(3, 3)).w == -1)
 		return (rot);
@@ -113,7 +113,7 @@ t_mat4	translation_mat4(t_vec3 v)
 	return (ret);
 }
 
-t_mat4 scaling_mat4(t_vec3 v)
+t_mat4	scaling_mat4(t_vec3 v)
 {
 	t_mat4 ret;
 

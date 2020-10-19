@@ -1,10 +1,22 @@
-#include "../../Include/vectors.h" 
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   vec_spe_mat.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: esuits <esuits@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/04/24 17:56:38 by esuits            #+#    #+#             */
+/*   Updated: 2020/08/08 18:20:32 by esuits           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-double *mat4_to_a(t_mat4 mat)
+#include "../../Include/vectors.h"
+
+double	*mat4_to_a(t_mat4 mat)
 {
-	double *ret;
-	int i;
-	int j;
+	double	*ret;
+	int		i;
+	int		j;
 
 	if (!(ret = ft_memalloc(sizeof(double) * 16)))
 		return (NULL);
@@ -18,11 +30,11 @@ double *mat4_to_a(t_mat4 mat)
 	return (ret);
 }
 
-double *mat3_to_a(t_mat3 mat)
+double	*mat3_to_a(t_mat3 mat)
 {
-	double *ret;
-	int i;
-	int j;
+	double	*ret;
+	int		i;
+	int		j;
 
 	if (!(ret = ft_memalloc(sizeof(double) * 3)))
 		return (NULL);

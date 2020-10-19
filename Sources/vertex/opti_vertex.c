@@ -12,7 +12,7 @@
 
 #include "../../Include/scop.h"
 
-static int		find_point(float *point, float tmp[13],int max)
+static int		find_point(float *point, float tmp[13], int max)
 {
 	int	i;
 
@@ -21,6 +21,31 @@ static int		find_point(float *point, float tmp[13],int max)
 		if (!(ft_memcmp(&(point[i * 13]), tmp, 13 * (sizeof(float)))))
 			return (i);
 	return (-1);
+}
+
+static void		fill_tmp2(float(*tmp)[13], int *indices, t_obj *obj, int i)
+{
+	int	index;
+
+	(*tmp)[0] = obj->v[indices[i]].x;
+	(*tmp)[1] = obj->v[indices[i]].y;
+	(*tmp)[2] = obj->v[indices[i]].z;
+	(*tmp)[3] = obj->v[indices[i]].w;
+	if (indices[i + 2] == -1)
+	{
+		(*tmp)[7] = ((*tmp)[0] + fabs(obj->min.x)) / (obj->max.x + fabs(obj->min.x));
+		(*tmp)[8] = ((*tmp)[1] + fabs(obj->min.y)) / (obj->max.y + fabs(obj->min.y));
+		(*tmp)[9] = ((*tmp)[2] + fabs(obj->min.z)) / (obj->max.z + fabs(obj->min.z));
+	}
+	else
+	{
+		(*tmp)[7] = obj->vn[indices[i + 2]].x;
+		(*tmp)[8] = obj->vn[indices[i + 2]].y;
+		(*tmp)[9] = obj->vn[indices[i + 2]].z;
+	}
+	(*tmp)[10] = 0;
+	(*tmp)[11] = 0;
+	(*tmp)[12] = 0;
 }
 
 static void		fill_tmp(float (*tmp)[13], int *indices, t_obj *obj, int i)
@@ -43,21 +68,7 @@ static void		fill_tmp(float (*tmp)[13], int *indices, t_obj *obj, int i)
 		(*tmp)[5] = obj->vt[indices[i + 1]].y;
 		(*tmp)[6] = obj->vt[indices[i + 1]].z;
 	}
-	if (indices[i + 2] == -1)
-	{
-		(*tmp)[7] = ((*tmp)[0] + fabs(obj->min.x)) / (obj->max.x + fabs(obj->min.x));
-		(*tmp)[8] = ((*tmp)[1] + fabs(obj->min.y)) / (obj->max.y + fabs(obj->min.y));
-		(*tmp)[9] = ((*tmp)[2] + fabs(obj->min.z)) / (obj->max.z + fabs(obj->min.z));
-	}
-	else
-	{
-		(*tmp)[7] = obj->vn[indices[i + 2]].x;
-		(*tmp)[8] = obj->vn[indices[i + 2]].y;
-		(*tmp)[9] = obj->vn[indices[i + 2]].z;
-	}
-	(*tmp)[10] = 0;
-	(*tmp)[11] = 0;
-	(*tmp)[12] = 0;
+	fill_tmp2(tmp, indices,obj, i);
 }
 
 static int		find_material(t_obj obj, char *mat)

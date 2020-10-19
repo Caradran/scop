@@ -114,14 +114,19 @@ static t_mat4	proj_mat(float fov, float far, float near)
 	return (ret);
 }
 
-static float	get_delata_time_rot(float delta_time)
+static float	get_delta_time_rot(t_camera *camera)
 {
 	static float	last_frame = 0;
 	float			current_frame;
+	static float	rotation = 0;
+	float			delta_time;
 
 	current_frame = glfwGetTime();
 	delta_time = current_frame - last_frame;
 	last_frame = current_frame;
+	// delta_time = get_delta_time_rot(delta_time);
+	if (camera->rotflag)
+		rotation += delta_time;
 	return (delta_time);
 }
 
@@ -131,14 +136,10 @@ void			transformations(t_glstruct glstruct,
 	t_mat4			ret;
 	float			test[16];
 	float			*mat_array;
-	int				i;
 	static float	rotation = 0;
-	static float	delta_time = 0;
 	GLint			m_viewport[4];
 
-	delta_time = get_delata_time_rot(delta_time);
-	if (camera->rotflag)
-		rotation += delta_time;
+	rotation = get_delta_time_rot(camera);
 	glGetIntegerv(GL_VIEWPORT, m_viewport);
 	ret = proj_mat(90.0f * M_PI / 360.0, 100000.0f, 0.1f);
 	ret = mult_mat4(ret, creat_mat_camera(camera));
@@ -148,9 +149,9 @@ void			transformations(t_glstruct glstruct,
 	ret = mult_mat4(ret, scaling_mat4(init_v3(1,
 		(float)m_viewport[2] / (float)m_viewport[3], 1)));
 	mat_array = (float*)mat4_to_a(ret);
-	i = -1;
-	while (++i < 16)
-		test[i] = (float)mat_array[i];
+	m_viewport[0] = -1;
+	while (++m_viewport[0] < 16)
+		test[m_viewport[0]] = (float)mat_array[m_viewport[0]];
 	ft_memdel((void**)&mat_array);
 	glUseProgram(glstruct.shader_program);
 	glUniformMatrix4fv(glGetUniformLocation(glstruct.shader_program,
