@@ -10,14 +10,10 @@ INC_PATH 		= $(shell find Include -type d) $(shell find libft -type d) $(shell f
 SRC				=	main.c							\
 					initialize/init_glew.c			\
 					initialize/init_glfw.c			\
-					initialize/init_parse.c			\
 					opengl/generate.c				\
-					opengl/generate_multi.c			\
 					opengl/shader.c					\
 					opengl/texture.c				\
 					other/error.c					\
-					other/print_debug.c				\
-					other/print_struct.c			\
 					other/utils.c					\
 					parsing/readshader.c			\
 					vectors/mat_add.c				\

@@ -126,16 +126,16 @@ void			generate_vbo(GLuint *vbo, float points[], int len);
 void			generate_ebo(GLuint *ebo, float points[], int len);
 void			generate_vao(GLuint *vao, GLuint vbo);
 void			generate_vbo2(GLuint *vbo, float points[],
-	int len, t_index *index, int nb);
+	int len, int nb);
 void			generate_ebo2(GLuint *ebo, float points[],
-	int len, t_index *index, int nb);
-void			generate_vao2(GLuint *vao, GLuint vbo, t_index *index, int nb);
+	int len, int nb);
+void			generate_vao2(GLuint *vao, GLuint vbo, int nb);
 
 /*
 **	Camera and object transformation functions
 */
 
-t_camera		init_camera(t_vec3 pos);
+t_camera		init_camera(t_vec3 pos, t_obj *obj);
 void			creat_camera(t_vec3 pos, t_camera *camera);
 void			transformations(t_glstruct glstruct,
 	t_camera *camera, t_obj *obj);
@@ -146,7 +146,8 @@ void			update_camera(t_glstruct *glstruct, t_camera *camera);
 */
 
 int				create_vert(t_obj obj, t_index **ret, int *index,
-	int size, t_group *ptr_grp);
+	int size);
+void			find_mat(t_group *ptr_grp, t_index	**ret, t_obj obj);
 void			set_max_vs(t_obj *obj);
 int				split_faces(t_obj *obj, t_index *ret, t_group *ptr_grp);
 

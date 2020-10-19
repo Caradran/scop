@@ -14,7 +14,7 @@
 #include <stdlib.h>
 #include "../../Include/scop.h"
 
-static t_mat4	creat_mat_camera(t_camera *camera)
+static t_mat4	creat_mat_camera(t_camera *camera, t_obj *obj)
 {
 	t_mat4 ret;
 	t_mat4 p;
@@ -46,7 +46,17 @@ static t_vec3	creat_med_pos(t_vertex min, t_vertex max)
 	return (med);
 }
 
-t_camera		init_camera(t_vec3 pos)
+static t_vec3	vertex_to_vec3(t_vertex vertex)
+{
+	t_vec3 ret;
+
+	ret.x = vertex.x;
+	ret.y = vertex.y;
+	ret.z = vertex.z;
+	return (ret);
+}
+
+t_camera		init_camera(t_vec3 pos, t_obj *obj)
 {
 	t_camera camera;
 
@@ -54,7 +64,9 @@ t_camera		init_camera(t_vec3 pos)
 	camera.pitch = 0;
 	camera.mouseflag = 1;
 	camera.polyflag = 0;
-	camera.speed_base = 10.0;
+	camera.rotflag = 0;
+	camera.speed_base = norme_v3(sub_v3(vertex_to_vec3(obj->min),
+		vertex_to_vec3(obj->max))) / 5.0;
 	creat_camera(pos, &camera);
 	return (camera);
 }
@@ -124,10 +136,9 @@ static float	get_delta_time_rot(t_camera *camera)
 	current_frame = glfwGetTime();
 	delta_time = current_frame - last_frame;
 	last_frame = current_frame;
-	// delta_time = get_delta_time_rot(delta_time);
 	if (camera->rotflag)
-		rotation += delta_time;
-	return (delta_time);
+		rotation += delta_time * camera->rotflag;
+	return (rotation);
 }
 
 void			transformations(t_glstruct glstruct,
@@ -135,23 +146,25 @@ void			transformations(t_glstruct glstruct,
 {
 	t_mat4			ret;
 	float			test[16];
-	float			*mat_array;
-	static float	rotation = 0;
-	GLint			m_viewport[4];
+	double			*mat_array;
+	GLint			m_view[4];
 
-	rotation = get_delta_time_rot(camera);
-	glGetIntegerv(GL_VIEWPORT, m_viewport);
-	ret = proj_mat(90.0f * M_PI / 360.0, 100000.0f, 0.1f);
-	ret = mult_mat4(ret, creat_mat_camera(camera));
+	get_delta_time_rot(camera);
+	glGetIntegerv(GL_VIEWPORT, m_view);
+	if (m_view[3] > m_view[2])
+		ret = mult_mat4(scaling_mat4(init_v3(1, (float)m_view[2] / (float)
+			m_view[3], 1)), proj_mat(90.0f * M_PI / 360.0, 100000.0f, 0.1f));
+	else
+		ret = mult_mat4(scaling_mat4(init_v3((float)m_view[3] / (float)
+			m_view[2], 1, 1)), proj_mat(90.0f * M_PI / 360.0, 100000.0f, 0.1f));
+	ret = mult_mat4(ret, creat_mat_camera(camera, obj));
 	ret = mult_mat4(ret, model_mat(init_v3(3, 3, 3),
 		creat_med_pos(obj->min, obj->max), normalize_v3(init_v3(1, 0, 0)),
-		-90 * M_PI / 180.0));
-	ret = mult_mat4(ret, scaling_mat4(init_v3(1,
-		(float)m_viewport[2] / (float)m_viewport[3], 1)));
-	mat_array = (float*)mat4_to_a(ret);
-	m_viewport[0] = -1;
-	while (++m_viewport[0] < 16)
-		test[m_viewport[0]] = (float)mat_array[m_viewport[0]];
+		get_delta_time_rot(camera) * M_PI / 180.0));
+	mat_array = mat4_to_a(ret);
+	m_view[0] = -1;
+	while (++m_view[0] < 16)
+		test[m_view[0]] = (float)mat_array[m_view[0]];
 	ft_memdel((void**)&mat_array);
 	glUseProgram(glstruct.shader_program);
 	glUniformMatrix4fv(glGetUniformLocation(glstruct.shader_program,
@@ -204,7 +217,7 @@ void			update_camera(t_glstruct *glstruct, t_camera *camera)
 		camera->pos = add_v3(camera->pos,
 			scale_v3(camera->speed, camera->front));
 	if (glfwGetKey(glstruct->window, GLFW_KEY_KP_ADD) == GLFW_PRESS)
-		camera->speed_base *= 1.001;
+		camera->speed_base *= 1.01;
 	if (glfwGetKey(glstruct->window, GLFW_KEY_S) == GLFW_PRESS)
 		camera->pos = sub_v3(camera->pos,
 			scale_v3(camera->speed, camera->front));
@@ -240,10 +253,13 @@ void			update_camera(t_glstruct *glstruct, t_camera *camera)
 		camera->rotinputflag)
 	{
 		camera->rotinputflag = 0;
-		camera->rotflag = camera->rotflag ? 0 : 1;
+		camera->rotflag += 5;
+		camera->rotflag %= 50;
 	}
 	if (!(glfwGetKey(glstruct->window, GLFW_KEY_R) == GLFW_PRESS))
+	{
 		camera->rotinputflag = 1;
+	}
 	if (glfwGetKey(glstruct->window, GLFW_KEY_T) == GLFW_PRESS &&
 		camera->textureinputflag)
 	{

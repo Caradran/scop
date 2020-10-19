@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   opti_vertex.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: esuits <esuits@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/08/08 17:54:46 by esuits            #+#    #+#             */
+/*   Updated: 2020/08/18 18:42:02 by esuits           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../Include/scop.h"
 
-double			ft_atof(const char *str)
+double		ft_atof(const char *str)
 {
 	int			i;
 	int			x;
@@ -26,7 +38,7 @@ double			ft_atof(const char *str)
 	return (res * sign);
 }
 
-int		ft_ralloc(char **str, int size)
+int			ft_ralloc(char **str, int size)
 {
 	char *res;
 
@@ -40,7 +52,7 @@ int		ft_ralloc(char **str, int size)
 	return (1);
 }
 
-int		count_words(char *line)
+int			count_words(char *line)
 {
 	int i;
 	int j;
@@ -61,14 +73,14 @@ int		count_words(char *line)
 	return (j);
 }
 
-int max(int a, int b)
+int			max(int a, int b)
 {
 	if (a > b)
 		return (a);
 	return (b);
 }
 
-int max_4(int a, int b, int c, int d)
+int			max_4(int a, int b, int c, int d)
 {
 	return (max(max(a, b), max(c, d)));
 }

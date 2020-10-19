@@ -302,9 +302,9 @@ int             main_parser(t_obj *obj)
 		ptr = obj->group;
 		while (ptr)
 		{
-			printf("\t\tGroup[%d] => . %ld\t\t= f~\t\t%ld\t(Mallocated)\n",i, ptr->size_face[0], ptr->size_face[1]);
-			printf("\t\t\tMaterial : [%s]\n", ptr->material);
-			printf("\t\t\tPath : [%s]\n", ptr->path);
+			// printf("\t\tGroup[%d] => . %ld\t\t= f~\t\t%ld\t(Mallocated)\n",i, ptr->size_face[0], ptr->size_face[1]);
+			// printf("\t\t\tMaterial : [%s]\n", ptr->material);
+			// printf("\t\t\tPath : [%s]\n", ptr->path);
 			ptr = ptr->next;
 			i++;
 		}

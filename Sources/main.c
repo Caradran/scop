@@ -76,7 +76,7 @@ void	draw_loop(t_glstruct glstruct, t_index *ret,
 	t_index		*tmp;
 	t_camera	camera;
 
-	camera = init_camera(init_v3(0, 0, -3));
+	camera = init_camera(init_v3(0, 0, -3), obj);
 	while (!glfwWindowShouldClose(glstruct.window))
 	{
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -213,13 +213,11 @@ int		main(int argc, char **argv)
 		return (objerror(obj, -1));
 	if (argc < 2 || argc > 3)
 		return (objerror(obj, 2));
-	printf("First Parsing\n");
 	if (objload(argv[1], INFO))
 		return (objerror(obj, 1));
 	i = 0;
 	while (i < argc - 2)
 	{
-		printf("Second Parsing\n");
 		if (objload(argv[i + 2], INFO))
 			return (objerror(obj, 1));
 		i++;
@@ -238,8 +236,9 @@ int		main(int argc, char **argv)
 			if (split_faces(obj, &(tmp), ptr_grp))
 				return (1);
 			if (create_vert(*obj, &(ptr), tmp.index,
-				tmp.face_size * 3, ptr_grp))
+				tmp.face_size * 3))
 				return (1);
+			find_mat(ptr_grp, &(ptr), *obj);
 			free(tmp.index);
 			if (ptr_grp && obj->mtl)
 			{
@@ -247,10 +246,7 @@ int		main(int argc, char **argv)
 				savetxt = tmp.index_txt;
 			}
 			else if (ptr_grp)
-			{
 				tmp.index_txt = savetxt;
-				printf("Save txt !");
-			}
 			if (ptr_grp->next)
 			{
 				if (!(ptr->next = malloc(sizeof(t_index))))
