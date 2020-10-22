@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "../../Include/scop.h"
+#include "../../Include/scop.h"
 
-int		split_other(int **ret, t_obj *obj, int index, int *i, t_group *ptr)
+int				split_other(int **ret, int index, int *i, t_group *ptr)
 {
 	int j;
 	int	save[3];
@@ -36,7 +36,8 @@ int		split_other(int **ret, t_obj *obj, int index, int *i, t_group *ptr)
 	}
 	return (0);
 }
-static int		*fill_ret(int	*ret, t_obj *obj, int *i, t_group *ptr_grp)
+
+static int		*fill_ret(int *ret, t_obj *obj, int *i, t_group *ptr_grp)
 {
 	int		index;
 	int		group;
@@ -60,14 +61,14 @@ static int		*fill_ret(int	*ret, t_obj *obj, int *i, t_group *ptr_grp)
 			*i += 9;
 		}
 		else
-			split_other(&ret, obj, index, i, ptr_grp);
+			split_other(&ret, index, i, ptr_grp);
 	}
 	return (ret);
 }
 
 int				split_faces(t_obj *obj, t_index *ret, t_group *ptr_grp)
 {
-	int 		size_malloc;
+	int			size_malloc;
 	int			i;
 
 	size_malloc = 0;

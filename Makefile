@@ -38,7 +38,6 @@ SRC				=	main.c							\
 					vectors/vec_scale.c				\
 					vectors/vec_sub.c				\
 					vertex/opti_vertex.c			\
-					vertex/setup_vs_max.c			\
 					vertex/split_faces.c			\
 					vertex/camera.c					\
 
